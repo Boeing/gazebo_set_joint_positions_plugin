@@ -75,11 +75,16 @@ void SetJointPositions::jointStateCallback(const sensor_msgs::JointState msg)
 {
     std::lock_guard<std::mutex> lock(lock_);
 
-    for (std::size_t i=0; i<msg.name.size(); ++i)
+    for (std::size_t i=0; i < msg.name.size(); ++i)
     {
         const std::string& name = msg.name.at(i);
 
-        auto it = std::find_if(joints_list_.begin(), joints_list_.end(), [name](const physics::JointPtr& jt) { return jt->GetName() == name; });
+        auto it = std::find_if(joints_list_.begin(),
+                               joints_list_.end(),
+                               [name](const physics::JointPtr& jt)
+        {
+            return jt->GetName() == name;
+        });  // NOLINT
         if (it == joints_list_.end())
         {
             ROS_WARN_STREAM("Could not find JointState message joint " << name << " in gazebo joint models");
