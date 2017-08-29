@@ -74,10 +74,16 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 void SetJointPositions::jointStateCallback(const sensor_msgs::JointState msg)
 {
     std::lock_guard<std::mutex> lock(lock_);
+    joint_state_ = msg;
+}
 
-    for (std::size_t i=0; i < msg.name.size(); ++i)
+void SetJointPositions::UpdateChild()
+{
+    std::lock_guard<std::mutex> lock(lock_);
+
+    for (std::size_t i=0; i < joint_state_.name.size(); ++i)
     {
-        const std::string& name = msg.name.at(i);
+        const std::string& name = joint_state_.name.at(i);
 
         auto it = std::find_if(joints_list_.begin(),
                                joints_list_.end(),
@@ -91,16 +97,22 @@ void SetJointPositions::jointStateCallback(const sensor_msgs::JointState msg)
         }
         else
         {
-            (*it)->SetPosition(0, msg.position[i]);
+            double position = joint_state_.position[i];
+
+            if (position > (*it)->GetUpperLimit(0).Radian())
+            {
+                ROS_WARN_STREAM("Joint " << (*it)->GetName() << " is above upper limit " << position << " > " << (*it)->GetUpperLimit(0).Radian());
+                position = (*it)->GetUpperLimit(0).Radian();
+            }
+            else if (position < (*it)->GetLowerLimit(0).Radian())
+            {
+                ROS_WARN_STREAM("Joint " << (*it)->GetName() << " is below lower limit "  << position << " < " << (*it)->GetLowerLimit(0).Radian());
+                position = (*it)->GetLowerLimit(0).Radian();
+            }
+
+            (*it)->SetPosition(0, position);
         }
     }
-}
-
-void SetJointPositions::UpdateChild()
-{
-    std::lock_guard<std::mutex> lock(lock_);
-
-    // Maybe update position every frame?
 }
 
 void SetJointPositions::queueThread()

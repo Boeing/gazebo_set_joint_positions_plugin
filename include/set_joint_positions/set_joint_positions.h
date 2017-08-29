@@ -45,11 +45,11 @@ class SetJointPositions : public ModelPlugin
     ros::NodeHandle *rosnode_;
 
     ros::Subscriber sub_;
-    sensor_msgs::JointState joint_state_;
 
     void PublishJointState();
 
     std::mutex lock_;
+    sensor_msgs::JointState joint_state_;
 
     std::string topic_name_;
     std::string robot_namespace_;
