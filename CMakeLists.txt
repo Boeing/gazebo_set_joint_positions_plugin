@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(set_joint_positions)
 
+add_definitions(-std=c++11)
+
 find_package(catkin REQUIRED COMPONENTS
     gazebo_ros
     roscpp
@@ -12,13 +14,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 include_directories(${GAZEBO_INCLUDE_DIRS})
 link_directories(${GAZEBO_LIBRARY_DIRS})
 
-find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
-
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS gazebo_ros roscpp sensor_msgs
+  CATKIN_DEPENDS roscpp gazebo_ros sensor_msgs
 )
 
 include_directories(

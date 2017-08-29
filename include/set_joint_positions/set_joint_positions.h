@@ -3,6 +3,7 @@
 
 #include <string>
 #include <mutex>
+#include <thread>
 
 #include <ros/callback_queue.h>
 #include <ros/subscribe_options.h>
@@ -37,9 +38,7 @@ class SetJointPositions : public ModelPlugin
     virtual void UpdateChild();
 
   private:
-    void jointStateCallback(const sensor_msgs::JointState _msg);
-
-    void QueueThread();
+    void jointStateCallback(const sensor_msgs::JointState msg);
 
     ros::NodeHandle *rosnode_;
 
@@ -55,8 +54,8 @@ class SetJointPositions : public ModelPlugin
 
     // Custom Callback Queue
     ros::CallbackQueue queue_;
-
-    boost::thread callback_queue_thread_;
+    std::thread callback_queue_thread_;
+    void queueThread();
 
     // Pointer to the update event connection
     event::ConnectionPtr update_connection_;

@@ -61,7 +61,7 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     sub_ = rosnode_->subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this, ros::TransportHints().tcpNoDelay());
 
     // Custom Callback Queue
-    callback_queue_thread_ = boost::thread(boost::bind(&SetJointPositions::QueueThread, this));
+    callback_queue_thread_ = std::thread(&SetJointPositions::queueThread, this);
 
     // New Mechanism for Updating every World Cycle
     // Listen to the update event. This event is broadcast every simulation iteration
@@ -89,7 +89,7 @@ void SetJointPositions::UpdateChild()
     // Maybe update position every frame?
 }
 
-void SetJointPositions::QueueThread()
+void SetJointPositions::queueThread()
 {
     const double timeout = 0.01;
     while (rosnode_->ok())
