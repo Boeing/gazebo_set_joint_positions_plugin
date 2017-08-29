@@ -1,5 +1,6 @@
+// Copyright 2018 Boeing
 #include <algorithm>
-#include <assert.h>
+#include <string>
 
 #include <set_joint_positions/set_joint_positions.h>
 

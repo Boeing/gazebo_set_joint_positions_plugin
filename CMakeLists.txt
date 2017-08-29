@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
     gazebo_ros
     roscpp
     sensor_msgs
+    roslint
 )
 
 find_package(gazebo REQUIRED)
@@ -45,3 +46,6 @@ install(TARGETS
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+set(ROSLINT_CPP_OPTS  "--filter=-whitespace/line_length,-readability/todo,-runtime/references,-build/c++11" )
+roslint_cpp()
