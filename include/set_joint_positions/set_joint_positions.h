@@ -62,8 +62,7 @@ class SetJointPositions : public ModelPlugin
     // Pointer to the update event connection
     event::ConnectionPtr update_connection_;
 
-    std::vector<physics::JointPtr> joints_list;
-    sensor_msgs::JointState set_joint_state_;
+    std::vector<physics::JointPtr> joints_list_;
 };
 
 }  // namespace gazebo

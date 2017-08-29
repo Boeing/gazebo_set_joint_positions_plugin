@@ -21,7 +21,7 @@ SetJointPositions::~SetJointPositions()
     queue_.disable();
     rosnode_->shutdown();
     callback_queue_thread_.join();
-    joints_list.clear();
+    joints_list_.clear();
     sub_.shutdown();
 
     delete rosnode_;
@@ -68,18 +68,26 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     // Listen to the update event. This event is broadcast every simulation iteration
     update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild, this));
 
-    joints_list = _model->GetJoints();
+    joints_list_ = _model->GetJoints();
 }
 
 void SetJointPositions::jointStateCallback(const sensor_msgs::JointState msg)
 {
     std::lock_guard<std::mutex> lock(lock_);
 
-    set_joint_state_ = msg;
-
-    for (std::size_t i = 0; i < set_joint_state_.position.size(); ++i)
+    for (std::size_t i=0; i<msg.name.size(); ++i)
     {
-        joints_list[i]->SetPosition(0, set_joint_state_.position[i]);
+        const std::string& name = msg.name.at(i);
+
+        auto it = std::find_if(joints_list_.begin(), joints_list_.end(), [name](const physics::JointPtr& jt) { return jt->GetName() == name; });
+        if (it == joints_list_.end())
+        {
+            ROS_WARN_STREAM("Could not find JointState message joint " << name << " in gazebo joint models");
+        }
+        else
+        {
+            (*it)->SetPosition(0, msg.position[i]);
+        }
     }
 }
 
