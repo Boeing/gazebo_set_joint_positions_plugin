@@ -93,7 +93,7 @@ void SetJointPositions::UpdateChild()
         });  // NOLINT
         if (it == joints_list_.end())
         {
-            ROS_WARN_STREAM("Could not find JointState message joint " << name << " in gazebo joint models");
+            ROS_WARN_STREAM_THROTTLE(1, "Could not find JointState message joint " << name << " in gazebo joint models");
         }
         else
         {
@@ -101,12 +101,12 @@ void SetJointPositions::UpdateChild()
 
             if (position > (*it)->GetUpperLimit(0).Radian())
             {
-                ROS_WARN_STREAM("Joint " << (*it)->GetName() << " is above upper limit " << position << " > " << (*it)->GetUpperLimit(0).Radian());
+                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is above upper limit " << position << " > " << (*it)->GetUpperLimit(0).Radian());
                 position = (*it)->GetUpperLimit(0).Radian();
             }
             else if (position < (*it)->GetLowerLimit(0).Radian())
             {
-                ROS_WARN_STREAM("Joint " << (*it)->GetName() << " is below lower limit "  << position << " < " << (*it)->GetLowerLimit(0).Radian());
+                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit "  << position << " < " << (*it)->GetLowerLimit(0).Radian());
                 position = (*it)->GetLowerLimit(0).Radian();
             }
 
