@@ -69,6 +69,14 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild, this));
 
     joints_list_ = _model->GetJoints();
+    links_list_ =  _model->GetLinks();
+
+    for (physics::LinkPtr link : links_list_)
+    {
+        link->SetCollideMode("none");
+        link->SetSelfCollide(false);
+        link->SetGravityMode(false);
+    }
 }
 
 void SetJointPositions::jointStateCallback(const sensor_msgs::JointState msg)
@@ -109,6 +117,8 @@ void SetJointPositions::UpdateChild()
                 ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit "  << position << " < " << (*it)->GetLowerLimit(0).Radian());
                 position = (*it)->GetLowerLimit(0).Radian();
             }
+
+            ROS_DEBUG_STREAM("Updating joint " << (*it)->GetName() << " from " << (*it)->GetAngle(0) << " to " << position);
 
             (*it)->SetPosition(0, position);
         }

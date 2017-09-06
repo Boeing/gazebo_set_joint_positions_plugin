@@ -63,6 +63,7 @@ class SetJointPositions : public ModelPlugin
     event::ConnectionPtr update_connection_;
 
     std::vector<physics::JointPtr> joints_list_;
+    std::vector<physics::LinkPtr> links_list_;
 };
 
 }  // namespace gazebo
