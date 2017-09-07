@@ -93,7 +93,8 @@ void SetJointPositions::UpdateChild()
 
         auto it = std::find_if(joints_list_.begin(),
                                joints_list_.end(),
-                               [name](const physics::JointPtr &jt) {
+                               [name](const physics::JointPtr &jt)
+                               {
                                    return jt->GetName() == name;
                                }); // NOLINT
         if (it == joints_list_.end())
@@ -136,4 +137,4 @@ void SetJointPositions::queueThread()
     }
 }
 
-} // namespace gazebo
+}  // namespace gazebo
