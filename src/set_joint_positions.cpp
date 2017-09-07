@@ -69,13 +69,11 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild, this));
 
     joints_list_ = _model->GetJoints();
-    links_list_ =  _model->GetLinks();
+    links_list_ = _model->GetLinks();
 
     for (physics::LinkPtr link : links_list_)
     {
-        link->SetCollideMode("none");
-        link->SetSelfCollide(false);
-        link->SetGravityMode(false);
+        link->SetEnabled(false);
     }
 }
 
@@ -89,16 +87,15 @@ void SetJointPositions::UpdateChild()
 {
     std::lock_guard<std::mutex> lock(lock_);
 
-    for (std::size_t i=0; i < joint_state_.name.size(); ++i)
+    for (std::size_t i = 0; i < joint_state_.name.size(); ++i)
     {
-        const std::string& name = joint_state_.name.at(i);
+        const std::string &name = joint_state_.name.at(i);
 
         auto it = std::find_if(joints_list_.begin(),
                                joints_list_.end(),
-                               [name](const physics::JointPtr& jt)
-        {
-            return jt->GetName() == name;
-        });  // NOLINT
+                               [name](const physics::JointPtr &jt) {
+                                   return jt->GetName() == name;
+                               }); // NOLINT
         if (it == joints_list_.end())
         {
             ROS_WARN_STREAM_THROTTLE(1, "Could not find JointState message joint " << name << " in gazebo joint models");
@@ -114,7 +111,7 @@ void SetJointPositions::UpdateChild()
             }
             else if (position < (*it)->GetLowerLimit(0).Radian())
             {
-                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit "  << position << " < " << (*it)->GetLowerLimit(0).Radian());
+                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit " << position << " < " << (*it)->GetLowerLimit(0).Radian());
                 position = (*it)->GetLowerLimit(0).Radian();
             }
 
@@ -122,6 +119,11 @@ void SetJointPositions::UpdateChild()
 
             (*it)->SetPosition(0, position);
         }
+    }
+    // Hack disables physics, required after call to any physics related function call
+    for (physics::LinkPtr link : links_list_)
+    {
+        link->SetEnabled(false);
     }
 }
 
@@ -134,4 +136,4 @@ void SetJointPositions::queueThread()
     }
 }
 
-}  // namespace gazebo
+} // namespace gazebo
