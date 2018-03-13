@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-    <name>set_joint_positions</name>
+    <name>gazebo_set_joint_positions</name>
     <version>0.1.0</version>
     <description>Set gazebo robot joint positions</description>
     <maintainer email="Phillip.Haeusler@boeing.com">Boeing</maintainer>

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <string>
 
-#include <set_joint_positions/set_joint_positions.h>
+#include <gazebo_set_joint_positions/set_joint_positions.h>
 
 namespace gazebo
 {

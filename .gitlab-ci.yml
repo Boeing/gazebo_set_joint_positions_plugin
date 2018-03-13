@@ -1,0 +1,36 @@
+stages:
+  - build
+  - test
+
+variables:
+    CI_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+
+build:
+  stage: build
+  image: docker:latest
+  before_script:
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - docker pull ${CI_IMAGE} || true
+  script:
+    - docker build -t ${CI_IMAGE} --build-arg http_proxy=http://172.17.0.1:3128 --build-arg https_proxy=http://172.17.0.1:3128 .
+    - docker push ${CI_IMAGE}
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
+lint:
+  stage: test
+  image:
+      name: ${CI_IMAGE}
+      entrypoint: []
+  before_script:
+    - cd /root/ros
+  script:
+    - catkin build --no-status --no-notify -v -c --summarize --no-deps $(catkin list --depends-on roslint -u) --catkin-make-args roslint 2>&1 | tee test_results || true
+    - awk '/Successful packages:/{y=1}y' test_results
+    - /bin/bash -c "! grep -E '([EW][0-9]{3})|(\.(cpp|h):[0-9]{1,}:.*\[[0-5]\])' test_results"
+  tags:
+    - docker-executor
+    - linux
+    - docker

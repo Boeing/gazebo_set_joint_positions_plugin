@@ -1,6 +1,6 @@
 // Copyright 2018 Boeing
-#ifndef SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
-#define SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#ifndef GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#define GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
 
 #include <string>
 #include <mutex>
@@ -68,4 +68,4 @@ class SetJointPositions : public ModelPlugin
 
 }  // namespace gazebo
 
-#endif  // SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#endif  // GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H

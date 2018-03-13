@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(set_joint_positions)
+project(gazebo_set_joint_positions)
 
 add_definitions(-std=c++11)
 
@@ -29,7 +29,7 @@ include_directories(
 ) 
 
 add_library(${PROJECT_NAME}
-    include/set_joint_positions/set_joint_positions.h
+    include/${PROJECT_NAME}/set_joint_positions.h
     src/set_joint_positions.cpp
 )
 
