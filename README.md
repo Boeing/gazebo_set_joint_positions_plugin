@@ -1,4 +1,4 @@
-# universal_robot
+# gazebo_set_joint_positions
 
 ## Installation
 
