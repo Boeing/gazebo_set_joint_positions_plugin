@@ -18,7 +18,7 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp gazebo sensor_msgs
+  CATKIN_DEPENDS roscpp gazebo_ros sensor_msgs
 )
 
 include_directories(
