@@ -1,11 +1,18 @@
 // Copyright 2018 Boeing
-#ifndef GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
-#define GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#ifndef SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#define SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
 
 #include <string>
 #include <mutex>
 #include <thread>
 #include <vector>
+
+#include <gazebo/common/common.hh>
+#include <gazebo/physics/physics.hh>
+#include <gazebo/transport/TransportTypes.hh>
+#include <gazebo/common/Plugin.hh>
+#include <gazebo/common/Events.hh>
+#include <gazebo/transport/transport.hh>
 
 #include <ros/callback_queue.h>
 #include <ros/subscribe_options.h>
@@ -15,13 +22,6 @@
 #include <ros/ros.h>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
-
-#include <gazebo/physics/physics.hh>
-#include <gazebo/transport/TransportTypes.hh>
-#include <gazebo/common/Plugin.hh>
-#include <gazebo/common/Events.hh>
-
-#include <gazebo/transport/transport.hh>
 
 namespace gazebo
 {
@@ -68,4 +68,4 @@ class SetJointPositions : public ModelPlugin
 
 }  // namespace gazebo
 
-#endif  // GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#endif  // SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H

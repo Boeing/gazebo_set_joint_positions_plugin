@@ -1,12 +1,13 @@
 // Copyright 2018 Boeing
+#include <set_joint_positions/set_joint_positions.h>
 #include <algorithm>
 #include <string>
+#include <vector>
 
-#include <gazebo_set_joint_positions/set_joint_positions.h>
 
 namespace gazebo
 {
-GZ_REGISTER_MODEL_PLUGIN(SetJointPositions)
+
 
 SetJointPositions::SetJointPositions()
 {
@@ -14,8 +15,6 @@ SetJointPositions::SetJointPositions()
 
 SetJointPositions::~SetJointPositions()
 {
-    event::Events::DisconnectWorldUpdateBegin(update_connection_);
-
     // Custom Callback Queue
     queue_.clear();
     queue_.disable();
@@ -51,7 +50,7 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     if (!ros::isInitialized())
     {
         ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
-                         << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
+                             << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
         return;
     }
 
@@ -59,7 +58,8 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
     rosnode_ = new ros::NodeHandle(robot_namespace_);
 
-    sub_ = rosnode_->subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this, ros::TransportHints().tcpNoDelay());
+    sub_ = rosnode_->subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this,
+                               ros::TransportHints().tcpNoDelay());
 
     // Custom Callback Queue
     callback_queue_thread_ = std::thread(&SetJointPositions::queueThread, this);
@@ -97,28 +97,74 @@ void SetJointPositions::UpdateChild()
                                {
                                    return jt->GetName() == name;
                                }); // NOLINT
+
         if (it == joints_list_.end())
         {
-            ROS_WARN_STREAM_THROTTLE(1, "Could not find JointState message joint " << name << " in gazebo joint models");
+            ROS_WARN_STREAM_THROTTLE(1, "Could not find JointState message joint " << name
+                                                                                   << " in gazebo joint models");
         }
         else
         {
             double position = joint_state_.position[i];
 
-            if (position > (*it)->GetUpperLimit(0).Radian())
+            // Bounds checks are required, if outside bounds Gazebo will not update the joint!
+            if (position > (*it)->UpperLimit(0))
             {
-                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is above upper limit " << position << " > " << (*it)->GetUpperLimit(0).Radian());
-                position = (*it)->GetUpperLimit(0).Radian();
+                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is above upper limit " << position
+                                                     << " > " << (*it)->UpperLimit(0));
+                position = (*it)->UpperLimit(0);
             }
-            else if (position < (*it)->GetLowerLimit(0).Radian())
+            else if (position < (*it)->LowerLimit(0))
             {
-                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit " << position << " < " << (*it)->GetLowerLimit(0).Radian());
-                position = (*it)->GetLowerLimit(0).Radian();
+                ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit " << position
+                                                     << " < " << (*it)->LowerLimit(0));
+                position = (*it)->LowerLimit(0);
             }
 
-            ROS_DEBUG_STREAM("Updating joint " << (*it)->GetName() << " from " << (*it)->GetAngle(0) << " to " << position);
+            ROS_DEBUG_STREAM(
+                "Updating joint " << (*it)->GetName() << " from " << (*it)->Position(0) << " to " << position);
 
             (*it)->SetPosition(0, position);
+
+            // Now also check if a mimic joint exists, and set it if it does
+            using Iter = std::vector<physics::JointPtr>::const_iterator;
+            for (Iter it_mimic = joints_list_.begin(); it_mimic != joints_list_.end(); ++it_mimic)
+            {
+                bool set_mimic = false;
+                if ((*it_mimic)->GetName() == name + "_mimic")
+                {
+                    set_mimic = true;
+                }
+                else if ((*it_mimic)->GetName() == name + "_mimic_inverted")
+                {
+                    set_mimic = true;
+                    position = -position;
+                }
+
+                if (set_mimic)
+                {
+                    // Bounds checks are required, if outside bounds Gazebo will not update the joint!
+                    if (position > (*it_mimic)->UpperLimit(0))
+                    {
+                        ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it_mimic)->GetName() << " is above upper limit "
+                                                             << position << " > "
+                                                             << (*it_mimic)->UpperLimit(0));
+                        position = (*it_mimic)->UpperLimit(0);
+                    }
+                    else if (position < (*it_mimic)->LowerLimit(0))
+                    {
+                        ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it_mimic)->GetName() << " is below lower limit "
+                                                             << position << " < "
+                                                             << (*it_mimic)->LowerLimit(0));
+                        position = (*it_mimic)->LowerLimit(0);
+                    }
+
+                    ROS_DEBUG_STREAM(
+                        "Updating joint " << (*it_mimic)->GetName() << " from " << (*it_mimic)->Position(0)
+                                          << " to " << position);
+                    (*it_mimic)->SetPosition(0, position);
+                }
+            }
         }
     }
     // Hack disables physics, required after call to any physics related function call
@@ -137,4 +183,5 @@ void SetJointPositions::queueThread()
     }
 }
 
+GZ_REGISTER_MODEL_PLUGIN(SetJointPositions)
 }  // namespace gazebo
