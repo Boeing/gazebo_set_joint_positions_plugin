@@ -68,4 +68,4 @@ class SetJointPositions : public ModelPlugin
 
 }  // namespace gazebo
 
-#endif  // SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#endif  // GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H

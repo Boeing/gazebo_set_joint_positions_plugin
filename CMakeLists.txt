@@ -29,8 +29,8 @@ include_directories(
 ) 
 
 add_library(${PROJECT_NAME}
-    include/${PROJECT_NAME}/set_joint_positions.h
-    src/set_joint_positions.cpp
+    include/${PROJECT_NAME}/gazebo_set_joint_positions_plugin.h
+        src/gazebo_set_joint_positions_plugin.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES} ${catkin_LIBRARIES})

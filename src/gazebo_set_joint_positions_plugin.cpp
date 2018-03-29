@@ -1,5 +1,5 @@
 // Copyright 2018 Boeing
-#include <gazebo_set_joint_positions_plugin/set_joint_positions.h>
+#include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
 #include <algorithm>
 #include <string>
 #include <vector>
