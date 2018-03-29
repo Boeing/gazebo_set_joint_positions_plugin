@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(gazebo_set_joint_positions)
+project(gazebo_set_joint_positions_plugin)
 
 add_definitions(-std=c++11)
 
