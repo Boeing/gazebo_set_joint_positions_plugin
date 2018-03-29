@@ -106,23 +106,31 @@ void SetJointPositions::UpdateChild()
         else
         {
             double position = joint_state_.position[i];
-
+#if GAZEBO_MAJOR_VERSION >= 8
+            double upper_limit = (*it)->UpperLimit(0);
+            double lower_limit = (*it)->LowerLimit(0);
+            double old_angle = (*it)->Position(0);
+#else
+            double upper_limit = (*it)->GetUpperLimit(0).Radian();
+            double lower_limit = (*it)->GetLowerLimit(0).Radian();
+            gazebo::math::Angle old_angle = (*it)->GetAngle(0);
+#endif
             // Bounds checks are required, if outside bounds Gazebo will not update the joint!
-            if (position > (*it)->UpperLimit(0))
+            if (position > upper_limit)
             {
                 ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is above upper limit " << position
-                                                     << " > " << (*it)->UpperLimit(0));
-                position = (*it)->UpperLimit(0);
+                                                     << " > " << upper_limit);
+                position = upper_limit;
             }
-            else if (position < (*it)->LowerLimit(0))
+            else if (position < lower_limit)
             {
                 ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it)->GetName() << " is below lower limit " << position
-                                                     << " < " << (*it)->LowerLimit(0));
-                position = (*it)->LowerLimit(0);
+                                                     << " < " << lower_limit);
+                position = lower_limit;
             }
 
             ROS_DEBUG_STREAM(
-                "Updating joint " << (*it)->GetName() << " from " << (*it)->Position(0) << " to " << position);
+                "Updating joint " << (*it)->GetName() << " from " << old_angle << " to " << position);
 
             (*it)->SetPosition(0, position);
 
@@ -143,24 +151,33 @@ void SetJointPositions::UpdateChild()
 
                 if (set_mimic)
                 {
+#if GAZEBO_MAJOR_VERSION >= 8
+                    double upper_limit = (*it_mimic)->UpperLimit(0);
+                    double lower_limit = (*it_mimic)->LowerLimit(0);
+                    double old_angle = (*it_mimic)->Position(0);
+#else
+                    double upper_limit = (*it_mimic)->GetUpperLimit(0).Radian();
+                    double lower_limit = (*it_mimic)->GetLowerLimit(0).Radian();
+                    gazebo::math::Angle old_angle = (*it_mimic)->GetAngle(0);
+#endif
                     // Bounds checks are required, if outside bounds Gazebo will not update the joint!
-                    if (position > (*it_mimic)->UpperLimit(0))
+                    if (position > upper_limit)
                     {
                         ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it_mimic)->GetName() << " is above upper limit "
                                                              << position << " > "
-                                                             << (*it_mimic)->UpperLimit(0));
-                        position = (*it_mimic)->UpperLimit(0);
+                                                             << upper_limit);
+                        position = upper_limit;
                     }
-                    else if (position < (*it_mimic)->LowerLimit(0))
+                    else if (position < lower_limit)
                     {
                         ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it_mimic)->GetName() << " is below lower limit "
                                                              << position << " < "
-                                                             << (*it_mimic)->LowerLimit(0));
-                        position = (*it_mimic)->LowerLimit(0);
+                                                             << lower_limit);
+                        position = lower_limit;
                     }
 
                     ROS_DEBUG_STREAM(
-                        "Updating joint " << (*it_mimic)->GetName() << " from " << (*it_mimic)->Position(0)
+                        "Updating joint " << (*it_mimic)->GetName() << " from " << old_angle
                                           << " to " << position);
                     (*it_mimic)->SetPosition(0, position);
                 }
