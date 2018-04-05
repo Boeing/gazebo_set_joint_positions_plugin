@@ -23,18 +23,6 @@ clang_format:
     - linux
     - docker
 
-pep8:
-  stage: lint
-  image: registry.web.boeing.com/robotics/continuous_integration/pep8
-  script:
-    - cd ros
-    - pycodestyle --max-line-length 120 .
-  tags:
-    - docker-executor
-    - linux
-    - docker
-
-
 build:
   stage: build
   image: docker:latest
