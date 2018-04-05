@@ -19,7 +19,6 @@ SetJointPositions::~SetJointPositions()
     callback_queue_thread_.join();
     joints_list_.clear();
     sub_.shutdown();
-
 }
 
 // cppcheck-suppress unusedFunction
@@ -55,9 +54,8 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     nh_ = ros::NodeHandle(robot_namespace_);
 
 
-
-    sub_ = nh_.subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this,
-                               ros::TransportHints().tcpNoDelay());
+    sub_ =
+        nh_.subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this, ros::TransportHints().tcpNoDelay());
 
     // Custom Callback Queue
     callback_queue_thread_ = std::thread(&SetJointPositions::queueThread, this);

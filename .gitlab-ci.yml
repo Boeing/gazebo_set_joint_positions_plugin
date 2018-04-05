@@ -12,7 +12,6 @@ variables:
   CI_UI_IMAGE: ${CI_REGISTRY_IMAGE}/ui:${CI_COMMIT_REF_SLUG}
   CI_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
 
-
 clang_format:
   stage: lint
   image: registry.web.boeing.com/robotics/continuous_integration/clang_format
@@ -23,16 +22,6 @@ clang_format:
     - linux
     - docker
 
-pep8:
-  stage: lint
-  image: registry.web.boeing.com/robotics/continuous_integration/pep8
-  script:
-    - cd ros
-    - run_pep8.sh
-  tags:
-    - docker-executor
-    - linux
-    - docker
 catkin_lint:
   stage: quality
   image: ${CI_IMAGE}-${VERSION}
