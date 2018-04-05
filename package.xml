@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
     <name>gazebo_set_joint_positions_plugin</name>
     <version>0.1.0</version>
     <description>Set gazebo robot joint positions</description>
@@ -9,16 +9,11 @@
 
     <buildtool_depend>catkin</buildtool_depend>
 
-    <build_depend>gazebo_ros</build_depend>
-    <build_depend>roscpp</build_depend>
-    <build_depend>sensor_msgs</build_depend>
-    <build_depend>gazebo_msgs</build_depend>
-    <build_depend>roslint</build_depend>
-
-    <run_depend>gazebo_ros</run_depend>
-    <run_depend>roscpp</run_depend>
-    <run_depend>sensor_msgs</run_depend>
-    <run_depend>gazebo_msgs</run_depend>
+    <depend>gazebo</depend>
+    <depend>gazebo_ros</depend>
+    <depend>roscpp</depend>
+    <depend>sensor_msgs</depend>
+    <depend>roslint</depend>
 
     <test_depend>rostest</test_depend>
 

@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
         gazebo_ros
         roscpp
         roslint
+        sensor_msgs
         )
 
 find_package(gazebo REQUIRED)
@@ -17,6 +18,7 @@ catkin_package(
         CATKIN_DEPENDS
         gazebo_ros
         roscpp
+        sensor_msgs
 )
 
 include_directories(
