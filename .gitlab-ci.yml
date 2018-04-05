@@ -22,6 +22,17 @@ clang_format:
     - linux
     - docker
 
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - wget --no-check-certificate https://git.web.boeing.com/robotics/continuous_integration/raw/master/Dockerfile
+    - docker build -t ${CI_IMAGE} --build-arg PROJECT_NAME=${CI_PROJECT_NAME} --build-arg http_proxy=http://172.17.0.1:3128 --build-arg https_proxy=http://172.17.0.1:3128 .
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
 catkin_lint:
   stage: quality
   image: ${CI_IMAGE}-${VERSION}
