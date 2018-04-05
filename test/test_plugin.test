@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<launch>
+
+    <arg name="mongo_hostname" default="$(optenv MONGO_HOST localhost)"/>
+    <arg name="mongo_port" default="$(optenv MONGO_PORT 27017)"/>
+
+    <arg name="use_sim_time" default="true"/>
+    <param name="/use_sim_time" value="true"/>
+
+    <!-- Gazebo Arguments -->
+    <arg name="gui" default="false"/>
+    <arg name="world_name" default="$(find gazebo_set_joint_positions_plugin)/test/test.world"/>
+    <arg name="extra_gazebo_args" default=""/>
+    <arg name="debug" default="false"/>
+    <arg name="physics" default="ode"/>
+    <arg name="verbose" default="true"/>
+    <arg name="paused" default="false"/>
+    <arg name="recording" default="false"/>
+    <arg unless="$(arg paused)" name="paused_arg" value=""/>
+    <arg if="$(arg paused)" name="paused_arg" value="-u"/>
+    <arg unless="$(arg recording)" name="recording_arg" value=""/>
+    <arg if="$(arg recording)" name="recording_arg" value="-r"/>
+    <arg unless="$(arg verbose)" name="verbose_arg" value=""/>
+    <arg if="$(arg verbose)" name="verbose_arg" value="--verbose"/>
+    <arg unless="$(arg debug)" name="debug_arg" value="gzserver"/>
+    <arg if="$(arg debug)" name="debug_arg" value="debug"/>
+
+    <!-- Gazebo Server-->
+    <node name="gazebo" pkg="gazebo_ros" type="$(arg debug_arg)" respawn="true" output="screen"
+          args="$(arg paused_arg) $(arg recording_arg) $(arg verbose_arg) -e $(arg physics) $(arg extra_gazebo_args) $(arg world_name)">
+    </node>
+
+    <!-- Gazebo UI -->
+    <group if="$(arg gui)">
+        <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen">
+        </node>
+    </group>
+
+    <!-- URDF -->
+    <param name="robot_description" textfile="$(find gazebo_set_joint_positions_plugin)/test/test.urdf"/>
+
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
+          args="-urdf -model test_robot -param robot_description"/>
+
+    <test test-name="test_plugin" pkg="gazebo_set_joint_positions_plugin" type="test_plugin.py"/>
+</launch>

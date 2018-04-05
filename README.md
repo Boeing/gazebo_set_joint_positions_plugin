@@ -9,7 +9,7 @@ Look at the included dockerfile.
 ### Manually
 
 ```bash
-git clone https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions
+git clone https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions_plugin
 ```
 
 ### With a .rosinstall file
@@ -17,7 +17,7 @@ git clone https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions
 Add the following to a .rosinstall file:
 
 ```yaml
-- git: {local-name: gazebo_set_joint_positions, uri: 'https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions'}
+- git: {local-name: gazebo_set_joint_positions_plugin, uri: 'https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions_plugin'}
 ```
 
 ```bash

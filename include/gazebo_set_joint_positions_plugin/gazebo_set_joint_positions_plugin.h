@@ -1,27 +1,27 @@
 // Copyright 2018 Boeing
-#ifndef GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
-#define GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#ifndef GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
+#define GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 
-#include <string>
 #include <mutex>
+#include <string>
 #include <thread>
 #include <vector>
 
-#include <ros/callback_queue.h>
-#include <ros/subscribe_options.h>
-#include <std_msgs/Float32MultiArray.h>
-#include <sensor_msgs/JointState.h>
-
-#include <ros/ros.h>
-#include <boost/thread.hpp>
-#include <boost/thread/mutex.hpp>
-
+#include <gazebo/common/Events.hh>
+#include <gazebo/common/Plugin.hh>
+#include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/transport/TransportTypes.hh>
-#include <gazebo/common/Plugin.hh>
-#include <gazebo/common/Events.hh>
-
 #include <gazebo/transport/transport.hh>
+
+#include <ros/callback_queue.h>
+#include <ros/subscribe_options.h>
+#include <sensor_msgs/JointState.h>
+#include <std_msgs/Float32MultiArray.h>
+
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <ros/ros.h>
 
 namespace gazebo
 {
@@ -42,7 +42,7 @@ class SetJointPositions : public ModelPlugin
   private:
     void jointStateCallback(const sensor_msgs::JointState msg);
 
-    ros::NodeHandle *rosnode_;
+    ros::NodeHandle nh_;
 
     ros::Subscriber sub_;
 
@@ -68,4 +68,4 @@ class SetJointPositions : public ModelPlugin
 
 }  // namespace gazebo
 
-#endif  // GAZEBO_SET_JOINT_POSITIONS_SET_JOINT_POSITIONS_H
+#endif  // GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H

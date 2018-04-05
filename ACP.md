@@ -1,8 +1,8 @@
 # Project Access Control Policy
 
-Project Name: gazebo_set_joint_positions
+Project Name: gazebo_set_joint_positions_plugin
 
-Project URL: https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions
+Project URL: https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions_plugin
 
 Project Owner(s): Richard Bain (richard.j.bain@boeing.com)
 
