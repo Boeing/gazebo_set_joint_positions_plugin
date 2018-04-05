@@ -1,13 +1,11 @@
 // Copyright 2018 Boeing
-#include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
 #include <algorithm>
+#include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
 #include <string>
 #include <vector>
 
-
 namespace gazebo
 {
-
 
 SetJointPositions::SetJointPositions()
 {
@@ -50,7 +48,7 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     if (!ros::isInitialized())
     {
         ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
-                             << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
+                         << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
         return;
     }
 
@@ -89,14 +87,10 @@ void SetJointPositions::UpdateChild()
 
     for (std::size_t i = 0; i < joint_state_.name.size(); ++i)
     {
-        const std::string &name = joint_state_.name.at(i);
+        const std::string& name = joint_state_.name.at(i);
 
-        auto it = std::find_if(joints_list_.begin(),
-                               joints_list_.end(),
-                               [name](const physics::JointPtr &jt)
-                               {
-                                   return jt->GetName() == name;
-                               }); // NOLINT
+        auto it = std::find_if(joints_list_.begin(), joints_list_.end(),
+                               [name](const physics::JointPtr& jt) { return jt->GetName() == name; });  // NOLINT
 
         if (it == joints_list_.end())
         {
@@ -129,8 +123,7 @@ void SetJointPositions::UpdateChild()
                 position = lower_limit;
             }
 
-            ROS_DEBUG_STREAM(
-                "Updating joint " << (*it)->GetName() << " from " << old_angle << " to " << position);
+            ROS_DEBUG_STREAM("Updating joint " << (*it)->GetName() << " from " << old_angle << " to " << position);
 
             (*it)->SetPosition(0, position);
 
@@ -164,21 +157,18 @@ void SetJointPositions::UpdateChild()
                     if (position > upper_limit)
                     {
                         ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it_mimic)->GetName() << " is above upper limit "
-                                                             << position << " > "
-                                                             << upper_limit);
+                                                             << position << " > " << upper_limit);
                         position = upper_limit;
                     }
                     else if (position < lower_limit)
                     {
                         ROS_WARN_STREAM_THROTTLE(1, "Joint " << (*it_mimic)->GetName() << " is below lower limit "
-                                                             << position << " < "
-                                                             << lower_limit);
+                                                             << position << " < " << lower_limit);
                         position = lower_limit;
                     }
 
-                    ROS_DEBUG_STREAM(
-                        "Updating joint " << (*it_mimic)->GetName() << " from " << old_angle
-                                          << " to " << position);
+                    ROS_DEBUG_STREAM("Updating joint " << (*it_mimic)->GetName() << " from " << old_angle << " to "
+                                                       << position);
                     (*it_mimic)->SetPosition(0, position);
                 }
             }
