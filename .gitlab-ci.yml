@@ -6,7 +6,6 @@ stages:
   - test
 
 variables:
-  VERSION: 0.6.0
   CI_PORTAL_IMAGE: ${CI_REGISTRY_IMAGE}/portal:${CI_COMMIT_REF_SLUG}
   CI_DOCS_IMAGE: ${CI_REGISTRY_IMAGE}/docs:${CI_COMMIT_REF_SLUG}
   CI_UI_IMAGE: ${CI_REGISTRY_IMAGE}/ui:${CI_COMMIT_REF_SLUG}
@@ -35,7 +34,7 @@ build:
 
 catkin_lint:
   stage: quality
-  image: ${CI_IMAGE}-${VERSION}
+  image: ${CI_IMAGE}
   variables:
       GIT_STRATEGY: none
   before_script:
@@ -49,7 +48,7 @@ catkin_lint:
 
 cppcheck:
   stage: quality
-  image: ${CI_IMAGE}-${VERSION}
+  image: ${CI_IMAGE}
   variables:
       GIT_STRATEGY: none
   before_script:
@@ -63,7 +62,7 @@ cppcheck:
 
 mypy:
   stage: quality
-  image: ${CI_IMAGE}-${VERSION}
+  image: ${CI_IMAGE}
   variables:
       GIT_STRATEGY: none
   before_script:
