@@ -17,32 +17,31 @@ clang_format:
   stage: lint
   image: registry.web.boeing.com/robotics/continuous_integration/clang_format
   script:
-    - check_clang_format.sh
+    - run_clang_format.sh
   tags:
     - docker-executor
     - linux
     - docker
 
-build:
-  stage: build
-  image: docker:latest
+pep8:
+  stage: lint
+  image: registry.web.boeing.com/robotics/continuous_integration/pep8
   script:
-    - wget --no-check-certificate https://git.web.boeing.com/robotics/continuous_integration/raw/master/Dockerfile
-    - docker build -t ${CI_IMAGE} --build-arg PROJECT_NAME=${CI_PROJECT_NAME} --build-arg http_proxy=http://172.17.0.1:3128 --build-arg https_proxy=http://172.17.0.1:3128 .
+    - cd ros
+    - run_pep8.sh
   tags:
     - docker-executor
     - linux
     - docker
-
 catkin_lint:
   stage: quality
-  image: ${CI_IMAGE}
+  image: ${CI_IMAGE}-${VERSION}
   variables:
       GIT_STRATEGY: none
   before_script:
     - cd /root/ros
   script:
-    - catkin_lint --strict -W2
+    - curl -s https://git.web.boeing.com/robotics/continuous_integration/raw/master/run_catkin_lint.sh | bash
   tags:
     - docker-executor
     - linux
@@ -50,15 +49,27 @@ catkin_lint:
 
 cppcheck:
   stage: quality
-  image: ${CI_IMAGE}
+  image: ${CI_IMAGE}-${VERSION}
   variables:
       GIT_STRATEGY: none
   before_script:
-    - cd /root/ros/src/${CI_PROJECT_NAME}
+    - cd /root/ros
   script:
-    - cppcheck --enable=all --suppress=missingIncludeSystem --inline-suppr src -I include --quiet &> errors.txt
-    - cat errors.txt
-    - if [ $(wc -l < errors.txt) -gt 0 ]; then exit 1; fi
+    - curl -s https://git.web.boeing.com/robotics/continuous_integration/raw/master/run_cppcheck.sh | bash
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
+mypy:
+  stage: quality
+  image: ${CI_IMAGE}-${VERSION}
+  variables:
+      GIT_STRATEGY: none
+  before_script:
+    - cd /root/ros
+  script:
+    - curl -s https://git.web.boeing.com/robotics/continuous_integration/raw/master/run_mypy.sh | bash
   tags:
     - docker-executor
     - linux
