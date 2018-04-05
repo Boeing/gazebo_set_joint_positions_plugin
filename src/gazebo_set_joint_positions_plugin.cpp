@@ -94,8 +94,8 @@ void SetJointPositions::UpdateChild()
 
         if (it == joints_list_.end())
         {
-            ROS_WARN_STREAM_THROTTLE(1, "Could not find JointState message joint " << name
-                                                                                   << " in gazebo joint models");
+            ROS_WARN_STREAM_THROTTLE(1,
+                                     "Could not find JointState message joint " << name << " in gazebo joint models");
         }
         else
         {
