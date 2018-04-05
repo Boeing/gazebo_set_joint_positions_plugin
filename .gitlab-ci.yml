@@ -1,35 +1,91 @@
+image: docker:latest
 stages:
+  - lint
   - build
+  - quality
   - test
 
 variables:
-    CI_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+  VERSION: 0.6.0
+  CI_PORTAL_IMAGE: ${CI_REGISTRY_IMAGE}/portal:${CI_COMMIT_REF_SLUG}
+  CI_DOCS_IMAGE: ${CI_REGISTRY_IMAGE}/docs:${CI_COMMIT_REF_SLUG}
+  CI_UI_IMAGE: ${CI_REGISTRY_IMAGE}/ui:${CI_COMMIT_REF_SLUG}
+  CI_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
 
-build:
-  stage: build
-  image: docker:latest
-  before_script:
-    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker pull ${CI_IMAGE} || true
+
+clang_format:
+  stage: lint
+  image: registry.web.boeing.com/robotics/continuous_integration/clang_format
   script:
-    - docker build -t ${CI_IMAGE} --build-arg http_proxy=http://172.17.0.1:3128 --build-arg https_proxy=http://172.17.0.1:3128 .
-    - docker push ${CI_IMAGE}
+    - check_clang_format.sh
   tags:
     - docker-executor
     - linux
     - docker
 
-lint:
-  stage: test
-  image:
-      name: ${CI_IMAGE}
-      entrypoint: []
+pep8:
+  stage: lint
+  image: registry.web.boeing.com/robotics/continuous_integration/pep8
+  script:
+    - cd ros
+    - pycodestyle --max-line-length 120 .
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - wget --no-check-certificate https://git.web.boeing.com/robotics/continuous_integration/raw/master/Dockerfile
+    - docker build -t ${CI_IMAGE} --build-arg PROJECT_NAME=${CI_PROJECT_NAME} --build-arg http_proxy=http://172.17.0.1:3128 --build-arg https_proxy=http://172.17.0.1:3128 .
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
+catkin_lint:
+  stage: quality
+  image: ${CI_IMAGE}
+  variables:
+      GIT_STRATEGY: none
   before_script:
     - cd /root/ros
   script:
-    - catkin build --no-status --no-notify -v -c --summarize --no-deps $(catkin list --depends-on roslint -u) --catkin-make-args roslint 2>&1 | tee test_results || true
-    - awk '/Successful packages:/{y=1}y' test_results
-    - /bin/bash -c "! grep -E '([EW][0-9]{3})|(\.(cpp|h):[0-9]{1,}:.*\[[0-5]\])' test_results"
+    - catkin_lint --strict -W2
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
+cppcheck:
+  stage: quality
+  image: ${CI_IMAGE}
+  variables:
+      GIT_STRATEGY: none
+  before_script:
+    - cd /root/ros/src/${CI_PROJECT_NAME}
+  script:
+    - cppcheck --enable=all --suppress=missingIncludeSystem --inline-suppr src -I include --quiet &> errors.txt
+    - cat errors.txt
+    - if [ $(wc -l < errors.txt) -gt 0 ]; then exit 1; fi
+  tags:
+    - docker-executor
+    - linux
+    - docker
+
+test:
+  stage: test
+  image: ${CI_IMAGE}
+  variables:
+      GIT_STRATEGY: none
+  before_script:
+    - cd /root/ros
+  script:
+    - catkin run_tests -j1 -i --no-status --no-notify
+    - catkin_test_results --all --verbose
   tags:
     - docker-executor
     - linux
