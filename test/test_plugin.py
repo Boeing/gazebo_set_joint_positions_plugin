@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import unittest
-import logging
 import rospy
 import rostest
 from std_msgs.msg import Header
@@ -46,7 +45,6 @@ class TestSetJointPositionsPlugin(unittest.TestCase):
     def set_position(self, position):
         test_state = JointState()
         test_state.header = Header()
-        # test_state.header.seq = 0
         test_state.header.stamp = rospy.Time.now()
         test_state.header.frame_id = 'world'
         test_state.name = [self.__test_joint_name]
@@ -58,8 +56,5 @@ class TestSetJointPositionsPlugin(unittest.TestCase):
 
 if __name__ == '__main__':
     rospy.init_node('test_plugin')
-
-    logging.getLogger('test_plugin').addHandler(rospy.impl.rosout.RosOutHandler())
-    logging.getLogger('test_plugin').setLevel(logging.DEBUG)
 
     rostest.rosrun('set_joint_positions', 'test_set_joint_positions', TestSetJointPositionsPlugin)

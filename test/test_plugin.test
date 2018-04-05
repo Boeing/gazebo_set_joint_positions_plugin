@@ -8,7 +8,7 @@
     <param name="/use_sim_time" value="true"/>
 
     <!-- Gazebo Arguments -->
-    <arg name="gui" default="true"/>
+    <arg name="gui" default="false"/>
     <arg name="world_name" default="$(find gazebo_set_joint_positions_plugin)/test/test.world"/>
     <arg name="extra_gazebo_args" default=""/>
     <arg name="debug" default="false"/>
