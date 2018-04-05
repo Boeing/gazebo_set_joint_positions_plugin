@@ -1,4 +1,3 @@
-image: docker:latest
 stages:
   - lint
   - build
@@ -6,9 +5,6 @@ stages:
   - test
 
 variables:
-  CI_PORTAL_IMAGE: ${CI_REGISTRY_IMAGE}/portal:${CI_COMMIT_REF_SLUG}
-  CI_DOCS_IMAGE: ${CI_REGISTRY_IMAGE}/docs:${CI_COMMIT_REF_SLUG}
-  CI_UI_IMAGE: ${CI_REGISTRY_IMAGE}/ui:${CI_COMMIT_REF_SLUG}
   CI_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
 
 clang_format:
@@ -25,7 +21,7 @@ build:
   stage: build
   image: docker:latest
   script:
-    - wget --no-check-certificate https://git.web.boeing.com/robotics/continuous_integration/raw/master/Dockerfile
+    - wget --no-check-certificate -O - https://git.web.boeing.com/robotics/continuous_integration/raw/master/build_dockerfile.sh | sh
     - docker build -t ${CI_IMAGE} --build-arg PROJECT_NAME=${CI_PROJECT_NAME} --build-arg http_proxy=http://172.17.0.1:3128 --build-arg https_proxy=http://172.17.0.1:3128 .
   tags:
     - docker-executor
@@ -55,20 +51,6 @@ cppcheck:
     - cd /root/ros
   script:
     - curl -s https://git.web.boeing.com/robotics/continuous_integration/raw/master/run_cppcheck.sh | bash
-  tags:
-    - docker-executor
-    - linux
-    - docker
-
-mypy:
-  stage: quality
-  image: ${CI_IMAGE}
-  variables:
-      GIT_STRATEGY: none
-  before_script:
-    - cd /root/ros
-  script:
-    - curl -s https://git.web.boeing.com/robotics/continuous_integration/raw/master/run_mypy.sh | bash
   tags:
     - docker-executor
     - linux
