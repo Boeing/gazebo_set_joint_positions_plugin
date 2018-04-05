@@ -16,14 +16,13 @@ SetJointPositions::~SetJointPositions()
     // Custom Callback Queue
     queue_.clear();
     queue_.disable();
-    rosnode_->shutdown();
     callback_queue_thread_.join();
     joints_list_.clear();
     sub_.shutdown();
 
-    delete rosnode_;
 }
 
+// cppcheck-suppress unusedFunction
 void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
     ROS_INFO("Initialising SetJointPositions Plugin");
@@ -53,10 +52,11 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     }
 
     ROS_INFO_STREAM("topicName:" << topic_name_);
+    nh_ = ros::NodeHandle(robot_namespace_);
 
-    rosnode_ = new ros::NodeHandle(robot_namespace_);
 
-    sub_ = rosnode_->subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this,
+
+    sub_ = nh_.subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this,
                                ros::TransportHints().tcpNoDelay());
 
     // Custom Callback Queue
@@ -184,7 +184,7 @@ void SetJointPositions::UpdateChild()
 void SetJointPositions::queueThread()
 {
     const double timeout = 0.01;
-    while (rosnode_->ok())
+    while (nh_.ok())
     {
         queue_.callAvailable(ros::WallDuration(timeout));
     }

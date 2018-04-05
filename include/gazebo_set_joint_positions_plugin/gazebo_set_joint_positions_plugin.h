@@ -42,7 +42,7 @@ class SetJointPositions : public ModelPlugin
   private:
     void jointStateCallback(const sensor_msgs::JointState msg);
 
-    ros::NodeHandle* rosnode_;
+    ros::NodeHandle nh_;
 
     ros::Subscriber sub_;
 
