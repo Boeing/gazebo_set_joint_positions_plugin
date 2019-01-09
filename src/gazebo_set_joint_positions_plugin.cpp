@@ -24,8 +24,6 @@ SetJointPositions::~SetJointPositions()
 // cppcheck-suppress unusedFunction
 void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
-    ROS_INFO("Initialising SetJointPositions Plugin");
-
     // load parameters
     robot_namespace_ = "";
 
@@ -49,10 +47,7 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
                          << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
         return;
     }
-
-    ROS_INFO_STREAM("topicName:" << topic_name_);
     nh_ = ros::NodeHandle(robot_namespace_);
-
 
     sub_ =
         nh_.subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this, ros::TransportHints().tcpNoDelay());
@@ -121,8 +116,6 @@ void SetJointPositions::UpdateChild()
                 position = lower_limit;
             }
 
-            ROS_DEBUG_STREAM("Updating joint " << (*it)->GetName() << " from " << old_angle << " to " << position);
-
             (*it)->SetPosition(0, position);
 
             // Now also check if a mimic joint exists, and set it if it does
@@ -176,6 +169,7 @@ void SetJointPositions::UpdateChild()
     for (physics::LinkPtr link : links_list_)
     {
         link->SetEnabled(false);
+        link->OnPoseChange();
     }
 }
 

@@ -31,7 +31,8 @@ class TestSetJointPositionsPlugin(unittest.TestCase):
         # Set test position
         self.set_position(test_position)
 
-        rospy.sleep(0.5)  # Small sleep to wait for the set to take effect
+        rospy.sleep(1)  # Small sleep to wait for the set to take effect
+
         # Get joint position
         get_joint_response = self.__get_joint_state_srv.call(
             GetJointPropertiesRequest(joint_name=self.__test_joint_name))
