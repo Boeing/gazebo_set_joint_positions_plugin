@@ -43,10 +43,7 @@ class SetJointPositions : public ModelPlugin
     void jointStateCallback(const sensor_msgs::JointState msg);
 
     ros::NodeHandle nh_;
-
     ros::Subscriber sub_;
-
-    void PublishJointState();
 
     std::mutex lock_;
     sensor_msgs::JointState joint_state_;

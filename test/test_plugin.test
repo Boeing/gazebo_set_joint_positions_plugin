@@ -13,7 +13,7 @@
     <arg name="extra_gazebo_args" default=""/>
     <arg name="debug" default="false"/>
     <arg name="physics" default="ode"/>
-    <arg name="verbose" default="true"/>
+    <arg name="verbose" default="false"/>
     <arg name="paused" default="false"/>
     <arg name="recording" default="false"/>
     <arg unless="$(arg paused)" name="paused_arg" value=""/>
