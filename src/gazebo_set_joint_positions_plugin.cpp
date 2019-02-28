@@ -1,4 +1,3 @@
-// Copyright 2018 Boeing
 #include <algorithm>
 #include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
 #include <string>
@@ -7,53 +6,41 @@
 namespace gazebo
 {
 
+namespace
+{
+
+template <typename TYPE>
+void loadParam(sdf::ElementPtr sdf, TYPE& value, const TYPE& default_value, const std::string& param_name)
+{
+    if (!sdf->HasElement(param_name))
+    {
+        value = default_value;
+    }
+    else
+    {
+        value = sdf->GetElement(param_name)->Get<TYPE>();
+    }
+}
+}
+
 SetJointPositions::SetJointPositions()
 {
 }
 
 SetJointPositions::~SetJointPositions()
 {
-    // Custom Callback Queue
-    queue_.clear();
-    queue_.disable();
-    callback_queue_thread_.join();
-    joints_list_.clear();
-    sub_.shutdown();
 }
 
 // cppcheck-suppress unusedFunction
 void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
-    // load parameters
-    robot_namespace_ = "";
+    loadParam(_sdf, robot_namespace_, std::string("/"), std::string("robot_namespace"));
+    loadParam(_sdf, topic_name_, std::string("/"), std::string("topic_name"));
 
-    if (_sdf->HasElement("robotNamespace"))
-        robot_namespace_ = _sdf->GetElement("robotNamespace")->Get<std::string>() + "/";
-
-    if (!_sdf->HasElement("topicName"))
-    {
-        ROS_FATAL("force plugin missing <topicName>, cannot proceed");
-        return;
-    }
-    else
-    {
-        topic_name_ = _sdf->GetElement("topicName")->Get<std::string>();
-    }
-
-    // Make sure the ROS node for Gazebo has already been initialized
-    if (!ros::isInitialized())
-    {
-        ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
-                         << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
-        return;
-    }
     nh_ = ros::NodeHandle(robot_namespace_);
 
     sub_ =
         nh_.subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this, ros::TransportHints().tcpNoDelay());
-
-    // Custom Callback Queue
-    callback_queue_thread_ = std::thread(&SetJointPositions::queueThread, this);
 
     // New Mechanism for Updating every World Cycle
     // Listen to the update event. This event is broadcast every simulation iteration
@@ -173,14 +160,5 @@ void SetJointPositions::UpdateChild()
     }
 }
 
-void SetJointPositions::queueThread()
-{
-    const double timeout = 0.01;
-    while (nh_.ok())
-    {
-        queue_.callAvailable(ros::WallDuration(timeout));
-    }
-}
-
 GZ_REGISTER_MODEL_PLUGIN(SetJointPositions)
-}  // namespace gazebo
+}
