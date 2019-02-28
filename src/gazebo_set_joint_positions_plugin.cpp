@@ -35,7 +35,7 @@ SetJointPositions::~SetJointPositions()
 void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
     loadParam(_sdf, robot_namespace_, std::string("/"), std::string("robot_namespace"));
-    loadParam(_sdf, topic_name_, std::string("/"), std::string("topic_name"));
+    loadParam(_sdf, topic_name_, std::string("/joint_states"), std::string("topic_name"));
 
     nh_ = ros::NodeHandle(robot_namespace_);
 

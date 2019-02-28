@@ -3,8 +3,8 @@
 
     <gazebo>
         <plugin name="set_joints_position_plugin" filename="libgazebo_set_joint_positions_plugin.so">
-            <robotNamespace>/</robotNamespace>
-            <topicName>ur_driver/joint_states</topicName>
+            <robot_namespace>/</robot_namespace>
+            <topic_name>ur_driver/joint_states</topic_name>
         </plugin>
     </gazebo>
 
