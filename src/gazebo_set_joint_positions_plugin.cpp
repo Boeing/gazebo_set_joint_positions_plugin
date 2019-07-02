@@ -83,11 +83,9 @@ void SetJointPositions::UpdateChild()
 #if GAZEBO_MAJOR_VERSION >= 8
             double upper_limit = (*it)->UpperLimit(0);
             double lower_limit = (*it)->LowerLimit(0);
-            double old_angle = (*it)->Position(0);
 #else
             double upper_limit = (*it)->GetUpperLimit(0).Radian();
             double lower_limit = (*it)->GetLowerLimit(0).Radian();
-            gazebo::math::Angle old_angle = (*it)->GetAngle(0);
 #endif
             // Bounds checks are required, if outside bounds Gazebo will not update the joint!
             if (position > upper_limit)
@@ -123,12 +121,12 @@ void SetJointPositions::UpdateChild()
                 if (set_mimic)
                 {
 #if GAZEBO_MAJOR_VERSION >= 8
-                    double upper_limit = (*it_mimic)->UpperLimit(0);
-                    double lower_limit = (*it_mimic)->LowerLimit(0);
+                    upper_limit = (*it_mimic)->UpperLimit(0);
+                    lower_limit = (*it_mimic)->LowerLimit(0);
                     double old_angle = (*it_mimic)->Position(0);
 #else
-                    double upper_limit = (*it_mimic)->GetUpperLimit(0).Radian();
-                    double lower_limit = (*it_mimic)->GetLowerLimit(0).Radian();
+                    upper_limit = (*it_mimic)->GetUpperLimit(0).Radian();
+                    lower_limit = (*it_mimic)->GetLowerLimit(0).Radian();
                     gazebo::math::Angle old_angle = (*it_mimic)->GetAngle(0);
 #endif
                     // Bounds checks are required, if outside bounds Gazebo will not update the joint!
