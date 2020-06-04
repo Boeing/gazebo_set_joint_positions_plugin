@@ -1,5 +1,6 @@
-#include <algorithm>
 #include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
+
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ void loadParam(sdf::ElementPtr sdf, TYPE& value, const TYPE& default_value, cons
         value = sdf->GetElement(param_name)->Get<TYPE>();
     }
 }
-}
+}  // namespace
 
 SetJointPositions::SetJointPositions()
 {
@@ -64,6 +65,12 @@ void SetJointPositions::jointStateCallback(const sensor_msgs::JointState msg)
 void SetJointPositions::UpdateChild()
 {
     std::lock_guard<std::mutex> lock(lock_);
+
+    if (joint_state_.header.stamp == ros::Time(0))
+        return;
+
+    if (joint_state_.position.empty())
+        return;
 
     for (std::size_t i = 0; i < joint_state_.name.size(); ++i)
     {
@@ -159,4 +166,4 @@ void SetJointPositions::UpdateChild()
 }
 
 GZ_REGISTER_MODEL_PLUGIN(SetJointPositions)
-}
+}  // namespace gazebo

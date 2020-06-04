@@ -1,6 +1,10 @@
 #ifndef GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 #define GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 
+#include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
+#include <std_msgs/Float32MultiArray.h>
+
 #include <gazebo/common/Events.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/common.hh>
@@ -8,14 +12,8 @@
 #include <gazebo/transport/TransportTypes.hh>
 #include <gazebo/transport/transport.hh>
 
-#include <sensor_msgs/JointState.h>
-#include <std_msgs/Float32MultiArray.h>
-
-#include <ros/ros.h>
-
 namespace gazebo
 {
-
 
 class SetJointPositions : public ModelPlugin
 {
@@ -46,6 +44,6 @@ class SetJointPositions : public ModelPlugin
     std::vector<physics::JointPtr> joints_list_;
     std::vector<physics::LinkPtr> links_list_;
 };
-}
+}  // namespace gazebo
 
 #endif
