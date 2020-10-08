@@ -22,6 +22,7 @@ class TestSetJointPositionsPlugin(unittest.TestCase):
         cls.__test_joint_name = 'set_link_joint'
 
     def test_set(self):
+        rospy.sleep(1)
         self.set_and_test_position(1.0)
         self.set_and_test_position(3.0)
         self.set_and_test_position(-1.0)
