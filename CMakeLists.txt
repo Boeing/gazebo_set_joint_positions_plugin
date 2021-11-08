@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(gazebo_set_joint_positions_plugin)
 
 find_package(catkin REQUIRED COMPONENTS gazebo_ros roscpp sensor_msgs)
