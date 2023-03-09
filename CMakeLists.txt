@@ -6,9 +6,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
 find_package(gazebo_dev REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp)
 
@@ -17,7 +19,7 @@ target_include_directories(
         ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(${PROJECT_NAME} gazebo_dev gazebo_ros sensor_msgs)
+ament_target_dependencies(${PROJECT_NAME} rclcpp gazebo_dev gazebo_ros std_msgs sensor_msgs)
 ament_export_dependencies(gazebo_dev)
 
 ament_export_targets(SetJointPositions HAS_LIBRARY_TARGET)

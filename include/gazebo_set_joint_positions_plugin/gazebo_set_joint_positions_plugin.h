@@ -1,9 +1,9 @@
 #ifndef GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 #define GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 
-#include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <std_msgs/Float32MultiArray.h>
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
 
 #include <gazebo/common/Events.hh>
 #include <gazebo/common/Plugin.hh>
@@ -15,26 +15,25 @@
 namespace gazebo
 {
 
-class SetJointPositions : public ModelPlugin
-{
+  class SetJointPositions : public ModelPlugin
+  {
   public:
     SetJointPositions();
-
     virtual ~SetJointPositions();
 
   protected:
     void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
-
     virtual void UpdateChild();
 
   private:
-    void jointStateCallback(const sensor_msgs::JointState msg);
+    void jointStateCallback(const sensor_msgs::msg::JointState msg);
 
-    ros::NodeHandle nh_;
-    ros::Subscriber sub_;
+    rclcpp::Node::SharedPtr nh_; // ros::NodeHandle nh_;
+    // rclcpp::Logger logger_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr sub_;
 
     std::mutex lock_;
-    sensor_msgs::JointState joint_state_;
+    sensor_msgs::msg::JointState joint_state_;
 
     std::string topic_name_;
     std::string robot_namespace_;
@@ -43,7 +42,7 @@ class SetJointPositions : public ModelPlugin
 
     std::vector<physics::JointPtr> joints_list_;
     std::vector<physics::LinkPtr> links_list_;
-};
-}  // namespace gazebo
+  };
+} // namespace gazebo
 
 #endif
