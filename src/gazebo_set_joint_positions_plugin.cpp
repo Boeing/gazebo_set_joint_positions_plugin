@@ -1,5 +1,5 @@
 #include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
-
+#include "gazebo_ros/node.hpp"
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -38,12 +38,9 @@ namespace gazebo
         loadParam(_sdf, robot_namespace_, std::string("/"), std::string("robot_namespace"));
         loadParam(_sdf, topic_name_, std::string("/joint_states"), std::string("topic_name"));
 
-        nh_ = std::make_shared<rclcpp::Node>("gazebo_set_joint_positions_plugin", robot_namespace_);
-
+        nh_ = gazebo_ros::Node::Get(_sdf);
         sub_ = nh_->create_subscription<sensor_msgs::msg::JointState>(topic_name_, 1,
                                                                       std::bind(&SetJointPositions::jointStateCallback, this, std::placeholders::_1));
-        //    sub_ =
-        //    nh_.subscribe(topic_name_, 1, &SetJointPositions::jointStateCallback, this, ros::TransportHints().tcpNoDelay());
 
         // New Mechanism for Updating every World Cycle
         // Listen to the update event. This event is broadcast every simulation iteration
@@ -56,6 +53,8 @@ namespace gazebo
         {
             link->SetEnabled(false);
         }
+
+        RCLCPP_INFO(nh_->get_logger(), "Loaded SetJointPositions gazebo plugin. Watching topic: %s", topic_name_.c_str());
     }
 
     void SetJointPositions::jointStateCallback(const sensor_msgs::msg::JointState msg)
@@ -151,7 +150,7 @@ namespace gazebo
                         }
 
                         RCLCPP_DEBUG_STREAM(logger_, "Updating joint " << (*it_mimic)->GetName() << " from " << old_angle << " to "
-                                                                       << position);
+                                                                      << position);
                         (*it_mimic)->SetPosition(0, position);
                     }
                 }
