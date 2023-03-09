@@ -1,44 +1,54 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8)
 project(gazebo_set_joint_positions_plugin)
 
-add_definitions(-std=c++14)
-
-find_package(catkin REQUIRED COMPONENTS gazebo_ros roscpp sensor_msgs)
-
-find_package(gazebo REQUIRED)
-
-catkin_package(
-    INCLUDE_DIRS
-    include
-    LIBRARIES
-    ${PROJECT_NAME}
-    CATKIN_DEPENDS
-    gazebo_ros
-    roscpp
-    sensor_msgs
-)
-
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
-
-add_library(${PROJECT_NAME} include/${PROJECT_NAME}/${PROJECT_NAME}.h src/${PROJECT_NAME}.cpp)
-
-target_link_libraries(${PROJECT_NAME} ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES} ${catkin_LIBRARIES})
-
-install(
-    DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-    FILES_MATCHING
-    PATTERN "*.h"
-)
-
-install(
-    TARGETS ${PROJECT_NAME}
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-if(CATKIN_ENABLE_TESTING)
-    find_package(rostest REQUIRED)
-    add_rostest(test/test_plugin.test)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(gazebo_dev REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
+add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp)
+
+
+target_include_directories(
+        ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>
+)
+
+ament_target_dependencies(${PROJECT_NAME} gazebo_dev gazebo_ros sensor_msgs)
+ament_export_dependencies(gazebo_dev)
+
+ament_export_targets(SetJointPositions HAS_LIBRARY_TARGET)
+
+ament_export_include_directories(include)
+ament_export_libraries(${PROJECT_NAME})
+
+
+install(DIRECTORY include DESTINATION include)
+
+install(
+        TARGETS ${PROJECT_NAME}
+        EXPORT SetJointPositions
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES
+        DESTINATION include
+)
+
+#
+# Add ros tests
+#
+enable_testing()
+find_file(NOSETESTS_EXECUTABLE nosetests)
+add_test(nosetests "${NOSETESTS_EXECUTABLE}" -v --with-xunit)
+
+install(DIRECTORY test DESTINATION share/${PROJECT_NAME}/test)
+
+find_package(launch_testing_ament_cmake)
+add_launch_test(test/test_plugin.py)
+
+ament_package()
+
