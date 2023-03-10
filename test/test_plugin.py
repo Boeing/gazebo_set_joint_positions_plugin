@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import os
 import unittest
-
+import time
 import launch
 import launch.actions
-
+from rclpy.executors import MultiThreadedExecutor
+from threading import Thread
 import launch_testing
 import launch_testing.actions
 from ament_index_python import get_package_share_directory
-
+from std_msgs.msg import Header
 import subprocess
 import rclpy
 import rclpy.clock
@@ -20,7 +21,7 @@ from rclpy.parameter import Parameter
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-
+from sensor_msgs.msg import JointState
 from gazebo_msgs.srv import GetEntityState
 from geometry_msgs.msg import Twist
 
@@ -97,40 +98,48 @@ class TestPlanarMovePlugin(unittest.TestCase):
     def setUpClass(cls):
         rclpy.init()
 
-        cls.__get_joint_state_srv = rospy.ServiceProxy(
-            name='/gazebo/get_joint_properties',
-            service_class=GetJointProperties
-        )
-        if not self.entity_state_client.wait_for_service(timeout_sec=10.0):
-            raise Exception("Entity state service not available, waiting again...")
-
-        cls.__joint_state_pub = rospy.Publisher("/joint_states", JointState, queue_size=100, latch=True)
-
         cls.__test_joint_name = 'set_link_joint'
 
     @classmethod
     def tearDownClass(cls):
         rclpy.shutdown()
 
+    def joint_state_callback(self, msg):
+        self.__joint_state = msg
+
     def setUp(self):
+
+        def spin_srv(executor):
+            try:
+                executor.spin()
+            except rclpy.executors.ExternalShutdownException:
+                pass
+
         self.node = rclpy.create_node('test_node', parameter_overrides=[
             Parameter('use_sim_time', Parameter.Type.BOOL, True)])
+        srv_executor = MultiThreadedExecutor()
+        srv_executor.add_node(self.node)
+        srv_thread = Thread(target=spin_srv, args=(srv_executor,), daemon=True)
+        srv_thread.start()
+
         self.clock = rclpy.clock.Clock(
             clock_type=rclpy.clock.ClockType.ROS_TIME)
         self.log = self.node.get_logger()
 
         # Client for checking entity status in gazebo
-        self.entity_state_client = self.node.create_client(
-            GetEntityState, '/gazebo/get_entity_state')
-        while not self.entity_state_client.wait_for_service(timeout_sec=1.0):
-            self.log.info(
-                'Entity state service not available, waiting again...')
+        self.log.info("Creating subscriber for joint state...")
+        self.__joint_state = None
+        self.__joint_state_sub = self.node.create_subscription(
+            JointState,
+            '/joint_states',
+            self.joint_state_callback,
+            10)
 
-        # Twist publisher with latching QoS
+        #  publisher with latching QoS
         qos_profile = QoSProfile(
             depth=100, durability=DurabilityPolicy.TRANSIENT_LOCAL, history=HistoryPolicy.KEEP_LAST)
-        self.twist_publisher = self.node.create_publisher(
-            Twist, 'cmd_vel', qos_profile)
+        self.joint_publisher = self.node.create_publisher(
+            JointState, '/joint_state', qos_profile)
 
         self.robot_name = 'test_robot'
         self.world_frame = 'world'
@@ -141,7 +150,7 @@ class TestPlanarMovePlugin(unittest.TestCase):
         self.node.destroy_node()
 
     def test_set(self):
-        rospy.sleep(1)
+        time.sleep(2000)
         self.set_and_test_position(1.0)
         self.set_and_test_position(3.0)
         self.set_and_test_position(-1.0)
@@ -150,26 +159,18 @@ class TestPlanarMovePlugin(unittest.TestCase):
     def set_and_test_position(self, test_position):
         # Set test position
         self.set_position(test_position)
+        time.sleep(2000)  # Small sleep to wait for the set to take effect
 
-        rospy.sleep(1)  # Small sleep to wait for the set to take effect
-
-        # Get joint position
-        get_joint_response = self.__get_joint_state_srv.call(
-            GetJointPropertiesRequest(joint_name=self.__test_joint_name))
-
-        rospy.loginfo('Joint pose retrieved as value: ''{}'' expected ''{}'''.format(get_joint_response.position[0],
-                                                                                     test_position))
-        assert isinstance(get_joint_response, GetJointPropertiesResponse)
-        self.assertTrue(get_joint_response.success)
-        self.assertAlmostEqual(get_joint_response.position[0], test_position)
+        # Get entity joint position
+        self.assertAlmostEqual(self.__joint_state.position[0], test_position)
 
     def set_position(self, position):
         test_state = JointState()
         test_state.header = Header()
-        test_state.header.stamp = rospy.Time.now()
+        test_state.header.stamp = self.node.get_clock().now().to_msg()
         test_state.header.frame_id = 'world'
         test_state.name = [self.__test_joint_name]
         test_state.position = [position]
         test_state.velocity = []
         test_state.effort = []
-        self.__joint_state_pub.publish(test_state)
+        self.joint_publisher.publish(test_state)
