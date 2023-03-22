@@ -28,8 +28,8 @@ namespace gazebo
   private:
     void jointStateCallback(const sensor_msgs::msg::JointState msg);
 
-    rclcpp::Node::SharedPtr nh_; // ros::NodeHandle nh_;
-    // rclcpp::Logger logger_;
+    physics::ModelPtr model_;
+    rclcpp::Node::SharedPtr nh_;
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr sub_;
 
     std::mutex lock_;
