@@ -1,10 +1,6 @@
 #ifndef GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 #define GAZEBO_SET_JOINT_POSITIONS_PLUGIN_H
 
-#include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "std_msgs/msg/float32_multi_array.hpp"
-
 #include <gazebo/common/Events.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/common.hh>
@@ -12,11 +8,15 @@
 #include <gazebo/transport/TransportTypes.hh>
 #include <gazebo/transport/transport.hh>
 
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
+
 namespace gazebo
 {
 
-  class SetJointPositions : public ModelPlugin
-  {
+class SetJointPositions : public ModelPlugin
+{
   public:
     SetJointPositions();
     virtual ~SetJointPositions();
@@ -42,7 +42,7 @@ namespace gazebo
 
     std::vector<physics::JointPtr> joints_list_;
     std::vector<physics::LinkPtr> links_list_;
-  };
-} // namespace gazebo
+};
+}  // namespace gazebo
 
 #endif
