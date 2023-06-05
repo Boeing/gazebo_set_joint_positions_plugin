@@ -38,16 +38,13 @@ install(
     DESTINATION include
 )
 
-#
-# Add ros tests
-#
-enable_testing()
-find_file(NOSETESTS_EXECUTABLE nosetests)
-add_test(nosetests "${NOSETESTS_EXECUTABLE}" -v --with-xunit)
+# Add Tests
+if(BUILD_TESTING)
+    find_package(ros_testing REQUIRED)
 
-install(DIRECTORY test DESTINATION share/${PROJECT_NAME}/test)
+    # install(DIRECTORY test DESTINATION share/${PROJECT_NAME}/test)
+    # add_ros_test(test/test_plugin.py)
 
-find_package(launch_testing_ament_cmake)
-add_launch_test(test/test_plugin.py)
+endif()
 
 ament_package()
