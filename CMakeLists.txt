@@ -42,8 +42,7 @@ install(
 if(BUILD_TESTING)
     find_package(ros_testing REQUIRED)
 
-    # install(DIRECTORY test DESTINATION share/${PROJECT_NAME}/test)
-    # add_ros_test(test/test_plugin.py)
+    # install(DIRECTORY test DESTINATION share/${PROJECT_NAME}/test) add_ros_test(test/test_plugin.py)
 
 endif()
 
