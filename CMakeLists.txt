@@ -40,10 +40,10 @@ install(
 
 # Add Tests
 if(BUILD_TESTING)
-    find_package(ros_testing REQUIRED)
+    install(DIRECTORY test DESTINATION share/${PROJECT_NAME})
+    find_package(launch_testing_ament_cmake REQUIRED)
 
-    # install(DIRECTORY test DESTINATION share/${PROJECT_NAME}/test) add_ros_test(test/test_plugin.py)
-
+    add_launch_test(test/test_plugin.test.py)
 endif()
 
 ament_package()
