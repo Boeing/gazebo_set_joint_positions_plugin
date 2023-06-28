@@ -45,7 +45,7 @@ namespace gazebo
                                                                       std::bind(&SetJointPositions::jointStateCallback, this, std::placeholders::_1));
         // New Mechanism for Updating every World Cycle
         // Listen to the update event. This event is broadcast every simulation iteration
-        update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild, this));
+//        update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild, this));
 
         joints_list_ = _model->GetJoints();
         links_list_ = _model->GetLinks();
@@ -64,6 +64,7 @@ namespace gazebo
             std::lock_guard<std::mutex> lock(lock_);
             joint_state_ = msg;
         }   // End lock
+        UpdateChild();
     }
 
     void SetJointPositions::UpdateChild()
@@ -73,12 +74,6 @@ namespace gazebo
             std::lock_guard<std::mutex> lock(lock_);
             last_joint_state = joint_state_;
         }
-
-//        // Block any other physics pose updates
-//        boost::recursive_mutex::scoped_lock plock(*model_->GetWorld()->Physics()->GetPhysicsUpdateMutex());
-
-        const bool is_paused = model_->GetWorld()->IsPaused();
-        const bool is_physics_enabled = model_->GetWorld()->PhysicsEnabled();
 
         if (last_joint_state.header.stamp == rclcpp::Time(0))
             return;
@@ -159,16 +154,6 @@ namespace gazebo
                 }
             }
         }
-        // Hack disables physics, required after call to any physics related function call
-        if (!is_physics_enabled)
-        {
-            for (physics::LinkPtr link : links_list_)
-            {
-                link->SetEnabled(false);
-            }
-        }
-
-        model_->GetWorld()->SetPaused(is_paused);
     }
 
     GZ_REGISTER_MODEL_PLUGIN(SetJointPositions)

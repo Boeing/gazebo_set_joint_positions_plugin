@@ -38,7 +38,7 @@ namespace gazebo
     std::string topic_name_;
     std::string robot_namespace_;
 
-    event::ConnectionPtr update_connection_;
+//    event::ConnectionPtr update_connection_;
 
     std::vector<physics::JointPtr> joints_list_;
     std::vector<physics::LinkPtr> links_list_;
