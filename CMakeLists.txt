@@ -14,9 +14,8 @@ find_package(std_msgs REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp)
 
-
 target_include_directories(
-        ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>
+    ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>
 )
 
 ament_target_dependencies(${PROJECT_NAME} rclcpp gazebo_dev gazebo_ros std_msgs sensor_msgs)
@@ -27,17 +26,16 @@ ament_export_targets(SetJointPositions HAS_LIBRARY_TARGET)
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 
-
 install(DIRECTORY include DESTINATION include)
 
 install(
-        TARGETS ${PROJECT_NAME}
-        EXPORT SetJointPositions
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES
-        DESTINATION include
+    TARGETS ${PROJECT_NAME}
+    EXPORT SetJointPositions
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES
+    DESTINATION include
 )
 
 #
@@ -53,4 +51,3 @@ find_package(launch_testing_ament_cmake)
 add_launch_test(test/test_plugin.py)
 
 ament_package()
-
