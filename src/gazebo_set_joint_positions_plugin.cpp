@@ -26,7 +26,7 @@ void loadParam(sdf::ElementPtr sdf, TYPE& value, const TYPE& default_value, cons
 }
 }  // namespace
 
-SetJointPositions::SetJointPositions()
+SetJointPositions::SetJointPositions() : update_needed_(false)
 {
 }
 
