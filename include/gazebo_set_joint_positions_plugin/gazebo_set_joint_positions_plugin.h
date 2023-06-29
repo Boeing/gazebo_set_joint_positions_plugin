@@ -38,7 +38,9 @@ class SetJointPositions : public ModelPlugin
     std::string topic_name_;
     std::string robot_namespace_;
 
-    //    event::ConnectionPtr update_connection_;
+    bool update_needed_;
+
+    event::ConnectionPtr update_connection_;
 
     std::vector<physics::JointPtr> joints_list_;
     std::vector<physics::LinkPtr> links_list_;
