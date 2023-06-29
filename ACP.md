@@ -2,7 +2,7 @@
 
 Project Name: gazebo_set_joint_positions_plugin
 
-Project URL: https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions_plugin
+Project URL: [https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions_plugin](https://git.web.boeing.com/robotics/ros/gazebo_set_joint_positions_plugin)
 
 Project Owner(s): Richard Bain (richard.j.bain@boeing.com)
 
@@ -30,12 +30,11 @@ Non-Person Account (API Account)| Y | N/A | CI / testing
 ABE* - Boeing Employee| N | N |
 ABE* - Non-Boeing (Contract Labor)| N | N |
 ABE* - Non-Boeing (Purchased Services/Contingent Labor)| N | N |
-
 **ABE = Authorized Boeing Employee*
 
 If exception allowed, please indicate primary/backup authorizers for exception(s) above.
 
-**No Exceptions to the above**
+**No Exceptions to the above.**
 
 Type|BEMSID|User Name
 ---|---|---
@@ -94,7 +93,6 @@ Employee Type|Can be granted access to CTI data? (Y/N)
 ABE* - Boeing Employee |
 ABE* - Non-Boeing (Contract Labor) |
 ABE* - Non-Boeing (Purchased Services/Contingent Labor) |
-
 **ABE = Authorized Boeing Employee*
 
 **If requesting access to ITAR/EAR for Non-US Persons, is there an export license? (Y/N)** No
@@ -144,17 +142,17 @@ Please indicate the types of information stored in this project. Please refer to
 Category of Information|Description|Command Media and Information Stakeholder Guidance|Contact for Guidance
 ---|---|---|---
 Boeing Finance Information: **NOT ALLOWED**| |Finance Information Protection Standards Manual, [D950-11196-1](http://catalog.web.boeing.com/search/X?searchtype=i&searcharg=D950-11196-1)|
-Business Records: **NOT ALLOWED**|Recorded information, regardless of medium or characteristics, made or received by an organization that is evidence of its operation, results achieved, and has value requiring its retention for a specific period of time.|Business Records must be retained and disposed in accordance with [PRO-251](http://policyplus.boeing.com/download.aspx?filename=PRO-251.pdf).|[ Contracts](http://finance.whq.boeing.com/Contracts&amp;Pricing/consulting.htm), [Supplier Management and Procurement (Global Partners)](http://smfunction.ca.boeing.com/index.html).
+Business Records: **NOT ALLOWED**|Recorded information, regardless of medium or characteristics, made or received by an organization that is evidence of its operation, results achieved, and has value requiring its retention for a specific period of time.|Business Records must be retained and disposed in accordance with [PRO-251](http://policyplus.boeing.com/download.aspx?filename=PRO-251.pdf).|[Contracts](http://finance.whq.boeing.com/Contracts&amp;Pricing/consulting.htm), [Supplier Management and Procurement (Global Partners)](http://smfunction.ca.boeing.com/index.html).
 Boeing Non-Public Information: **(Y/N)** No|Information that has been created by Boeing but has not been marked with an information type or supplemental control, does not have specific sharing restrictions and is not Boeing Public Information.|
 Boeing Proprietary Information: **(Y/N)** Yes|Information, regardless of form, that the Company has rights in and that has actual or potential economic value. Boeing Proprietary Information does not include other party proprietary information.|[PRO-1003](http://policyplus.boeing.com/download.aspx?filename=PRO-1003.pdf), [PRO-6901](http://policyplus.boeing.com/download.aspx?filename=PRO-6901.pdf) and ["Determining Boeing Proprietary Information"](http://compsec.boeing.com/policy/pro2227/marking/determineBP.asp).|[Intellectual Property Management](http://ipb.web.boeing.com/), [Contracts](http://finance.whq.boeing.com/Contracts&amp;Pricing/consulting.htm).
 Critical Technical Information:  **NOT ALLOWED**|CTI is defined as: Technical information and know-how (e.g., manufacturing processes, algorithms, source code, design and analysis tools, etc.) that: 1. Significantly discriminates Boeing's products and services from its competitors, and 2. Shall not be released or disclosed outside the Company.|Critical Technical Information (CTI) shall be protected in accordance with [PRO-6901](http://policyplus.boeing.com/download.aspx?filename=PRO-6901).|[Intellectual Property Management](http://ipb.web.boeing.com/)
-Export-Controlled Information: **(Y/N)** No|Any information related to technology (including technical data and processes), hardware or products, software, and services subject to export and import laws in force around the world and/or in the United States (i.e., the International Traffic in Arms Regulations or the Export Administration Regulations).|International Traffic in Arms Regulations (ITAR), Export Administration Regulations (EAR), and/or other global export regulations [PRO-6630](http://policyplus.boeing.com/download.aspx?filename=PRO-6630.pdf), "Export Life Cycle for U.S. Export of Hardware, Software, Technology and Services" [PRO-2805](http://policyplus.boeing.com/download.aspx?filename=PRO-2805.pdf), "Export and Import of Commodities, Software, Technology and Services" [PRO-174](http://policyplus.boeing.com/download.aspx?filename=PRO-174.pdf), "Technology Control Plan".|[ IT Compliance Export](http://boeingitbusinesssys.web.boeing.com/index.aspx?com=95&amp;id=1), [Global Trade Controls](http://globaltradecontrols.web.boeing.com/focals/index.htm).
-Material Nonpublic Information: **NOT ALLOWED**||[ PRO-1752](http://policyplus.boeing.com/download.aspx?filename=PRO-1752.pdf), "Release of Material Nonpublic Information Outside The Boeing Company to the Public".|[ Finance Department](http://finance.whq.boeing.com/).|
-Classified National Security Information: **NOT ALLOWED**||[ The Boeing Security Manual for Safeguarding Classified Information](http://library.web.boeing.com/report2/boedoc3/D200-10015-1.pdf), Standard Practice Procedure (BSM)D200-10015-1, Contracts, Federal Acquisition Regulations.|[ Security &amp; Fire Protection Regional Focal](http://securityandfire.web.boeing.com/Regional.htm).
+Export-Controlled Information: **(Y/N)** No|Any information related to technology (including technical data and processes), hardware or products, software, and services subject to export and import laws in force around the world and/or in the United States (i.e., the International Traffic in Arms Regulations or the Export Administration Regulations).|International Traffic in Arms Regulations (ITAR), Export Administration Regulations (EAR), and/or other global export regulations [PRO-6630](http://policyplus.boeing.com/download.aspx?filename=PRO-6630.pdf), "Export Life Cycle for U.S. Export of Hardware, Software, Technology and Services" [PRO-2805](http://policyplus.boeing.com/download.aspx?filename=PRO-2805.pdf), "Export and Import of Commodities, Software, Technology and Services" [PRO-174](http://policyplus.boeing.com/download.aspx?filename=PRO-174.pdf), "Technology Control Plan".|[IT Compliance Export](http://boeingitbusinesssys.web.boeing.com/index.aspx?com=95&amp;id=1), [Global Trade Controls](http://globaltradecontrols.web.boeing.com/focals/index.htm).
+Material Nonpublic Information: **NOT ALLOWED**||[PRO-1752](http://policyplus.boeing.com/download.aspx?filename=PRO-1752.pdf), "Release of Material Nonpublic Information Outside The Boeing Company to the Public".|[Finance Department](http://finance.whq.boeing.com/).|
+Classified National Security Information: **NOT ALLOWED**||[The Boeing Security Manual for Safeguarding Classified Information](http://library.web.boeing.com/report2/boedoc3/D200-10015-1.pdf), Standard Practice Procedure (BSM)D200-10015-1, Contracts, Federal Acquisition Regulations.|[Security &amp; Fire Protection Regional Focal](http://securityandfire.web.boeing.com/Regional.htm).
 Unclassified National Security Information: **(Y/N)** No| |Contracts, Federal Acquisition Regulations.|
-Personal Information: **NOT ALLOWED**|Information that can be used to identify, contact or locate a single individual that could cause significant harm to an individual or to Boeing if not properly collected, protected or used. Click [here](http://hr.web.boeing.com/index.aspx?com=19&amp;id=63) for a list of SPII.|[ PRO-98](http://policyplus.boeing.com/download.aspx?filename=PRO-98.pdf), "Personal Information Protection and Privacy".|[Global Privacy Office](http://hr.web.boeing.com/index.aspx?com=19&amp;id=1), [Global Privacy Office SPII Sensitivity Determination](http://hr.web.boeing.com/index.aspx?com=19&amp;id=63).
+Personal Information: **NOT ALLOWED**|Information that can be used to identify, contact or locate a single individual that could cause significant harm to an individual or to Boeing if not properly collected, protected or used. Click [here](http://hr.web.boeing.com/index.aspx?com=19&amp;id=63) for a list of SPII.|[PRO-98](http://policyplus.boeing.com/download.aspx?filename=PRO-98.pdf), "Personal Information Protection and Privacy".|[Global Privacy Office](http://hr.web.boeing.com/index.aspx?com=19&amp;id=1), [Global Privacy Office SPII Sensitivity Determination](http://hr.web.boeing.com/index.aspx?com=19&amp;id=63).
 Proprietary Information of Others: **(Y/N)** No|Information of a non-Boeing party that Boeing has an obligation to protect under law or by contract. Proprietary Information of Others is also referred to as "Non-Boeing Proprietary Information" and "Third Party Proprietary Information".|Proprietary Information of Others shall be protected in accordance with [PRO-70](http://policyplus.boeing.com/download.aspx?filename=PRO-70.pdf"), [PRO-1003](http://policyplus.boeing.com/download.aspx?filename=PRO-1003.pdf), [PRO-6375](http://policyplus.boeing.com/download.aspx?filename=PRO-6375.pdf), and [PRO-5124](http://policyplus.boeing.com/download.aspx?filename=PRO-5124.pdf).|[Contracts](http://finance.whq.boeing.com/Contracts&amp;Pricing/consulting.htm), [Ethics](http://ethics.whq.boeing.com/), [Intellectual Property Management](http://ipb.web.boeing.com/), [Law](https://law.web.boeing.com/), [Corporate Contracts and Pricing](http://finance.whq.boeing.com/Contracts&amp;Pricing/indexcontracts.htm), [Supplier Management](http://smfunction.ca.boeing.com/index.html) and Procurement (Global Partners).
-Public Information: **(Y/N)** No||Any Contract that applies to the information.|[ Contracts](http://finance.whq.boeing.com/Contracts&amp;Pricing/consulting.htm), [Supplier Management and Procurement (Global Partners)](http://smfunction.ca.boeing.com/index.html).|
+Public Information: **(Y/N)** No||Any Contract that applies to the information.|[Contracts](http://finance.whq.boeing.com/Contracts&amp;Pricing/consulting.htm), [Supplier Management and Procurement (Global Partners)](http://smfunction.ca.boeing.com/index.html).|
 Regulatory Compliance (SOX or Other): **NOT ALLOWED**| | |
 
 **Describe any restrictions on the use of National Security Information per Boeing Security Manual, D200-10015-1\. If no restrictions apply, enter N/A.**

@@ -1,3 +1,5 @@
+# Merge request template
+
 Simple description of the merge request. Use this template as a starting point and add/delete sections where it makes sense.
 
 Closes #
@@ -23,13 +25,16 @@ Closes #
 ## Todo
 
 ### API changes
-- [ ] Document change above and in READMEs 
+
+- [ ] Document change above and in READMEs
 - [ ] Discussed with downstream developers / users (if possible).
 
 ### All merges
+
 - [ ] Tests added/modified/checked for this change
 - [ ] Added appropriate tags to this MR
 - [ ] Documentation updated
 
 ### After merge
+
 - [ ] Posted changes to the [changelog channel](https://mattermost.web.boeing.com/brta-robotics/channels/changelog)
