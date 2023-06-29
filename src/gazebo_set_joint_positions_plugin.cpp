@@ -47,8 +47,7 @@ void SetJointPositions::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         topic_name_, 1, std::bind(&SetJointPositions::jointStateCallback, this, std::placeholders::_1));
     // New Mechanism for Updating every World Cycle
     // Listen to the update event. This event is broadcast every simulation iteration
-    update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild,
-    this));
+    update_connection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&SetJointPositions::UpdateChild, this));
 
     joints_list_ = _model->GetJoints();
     links_list_ = _model->GetLinks();
@@ -72,15 +71,13 @@ void SetJointPositions::jointStateCallback(const sensor_msgs::msg::JointState ms
 
 void SetJointPositions::UpdateChild()
 {
-    if (update_needed_) // Only update if there is a change. Any updates should still be done on the world update event
+    if (update_needed_)  // Only update if there is a change. Any updates should still be done on the world update event
     {
         sensor_msgs::msg::JointState last_joint_state;  // Local copy of callback value
         {                                               // Lock scope, keep the locks tight for speed
             std::lock_guard<std::mutex> lock(lock_);
             last_joint_state = joint_state_;
         }
-        const bool is_paused = model_->GetWorld()->IsPaused();
-        const bool is_physics_enabled = model_->GetWorld()->PhysicsEnabled();
 
         if (last_joint_state.header.stamp == rclcpp::Time(0))
             return;
@@ -163,23 +160,14 @@ void SetJointPositions::UpdateChild()
                         }
 
                         RCLCPP_DEBUG_STREAM_THROTTLE(nh_->get_logger(), *nh_->get_clock(), 1000,
-                                                     "Updating joint " << (*it_mimic)->GetName() << " from " << old_angle
-                                                                       << " to " << position);
+                                                     "Updating joint " << (*it_mimic)->GetName() << " from "
+                                                                       << old_angle << " to " << position);
                         (*it_mimic)->SetPosition(0, position);
                     }
                 }
             }
         }
-        // Hack disables physics, required after call to any physics related function call
-        if (!is_physics_enabled)
-        {
-            for (physics::LinkPtr link : links_list_)
-            {
-                link->SetEnabled(false);
-            }
-        }
-        model_->GetWorld()->SetPaused(is_paused);
-        update_needed_ = false; // Flag we are done
+        update_needed_ = false;  // Flag we are done
     }
 }
 
