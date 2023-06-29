@@ -22,8 +22,6 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from sensor_msgs.msg import JointState
-from gazebo_msgs.srv import GetEntityState
-from geometry_msgs.msg import Twist
 
 from time import sleep
 
