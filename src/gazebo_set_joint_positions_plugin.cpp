@@ -77,6 +77,8 @@ void SetJointPositions::UpdateChild()
         std::lock_guard<std::mutex> lock(lock_);
         last_joint_state = joint_state_;
     }
+//    const bool is_paused = model_->GetWorld()->IsPaused();
+    const bool is_physics_enabled = model_->GetWorld()->PhysicsEnabled();
 
     if (last_joint_state.header.stamp == rclcpp::Time(0))
         return;
@@ -166,6 +168,16 @@ void SetJointPositions::UpdateChild()
             }
         }
     }
+    // Hack disables physics, required after call to any physics related function call
+    if (!is_physics_enabled)
+    {
+        for (physics::LinkPtr link : links_list_)
+        {
+            link->SetEnabled(false);
+            link->OnPoseChange();
+        }
+    }
+    model_->GetWorld()->SetPaused(false);
 }
 
 GZ_REGISTER_MODEL_PLUGIN(SetJointPositions)
