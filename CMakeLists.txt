@@ -42,6 +42,7 @@ install(
 if(BUILD_TESTING)
     install(DIRECTORY test DESTINATION share/${PROJECT_NAME})
     find_package(launch_testing_ament_cmake REQUIRED)
+    find_package(gazebo_planar_move_plugin REQUIRED)
 
     add_launch_test(test/test_plugin.py)
 endif()
