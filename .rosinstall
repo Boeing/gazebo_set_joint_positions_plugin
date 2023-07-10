@@ -1,0 +1,5 @@
+repositories:
+  gazebo_planar_move_plugin:
+    type: git
+    url: https://gitlab.com/mtdi/pi9419/boeing/gazebo_planar_move_plugin.git
+    version: humble
