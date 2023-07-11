@@ -145,7 +145,7 @@ class TestSetJointsPositionsPlugin(unittest.TestCase):
         self.node.destroy_node()
 
     def test_set(self):
-        time.sleep(2)
+        sleep(10)
         self.set_and_test_position(1.0)
         self.set_and_test_position(3.0)
         self.set_and_test_position(-1.0)
