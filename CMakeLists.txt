@@ -19,7 +19,7 @@ target_include_directories(
     ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(${PROJECT_NAME} rclcpp gazebo_dev gazebo_ros std_msgs sensor_msgs)
+ament_target_dependencies(${PROJECT_NAME} rclcpp gazebo_dev gazebo_ros std_msgs sensor_msgs joint_state_publisher)
 ament_export_dependencies(gazebo_dev)
 
 ament_export_targets(SetJointPositions HAS_LIBRARY_TARGET)
