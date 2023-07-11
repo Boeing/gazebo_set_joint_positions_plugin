@@ -18,14 +18,7 @@ target_include_directories(
     ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(
-    ${PROJECT_NAME}
-    rclcpp
-    gazebo_dev
-    gazebo_ros
-    std_msgs
-    sensor_msgs
-)
+ament_target_dependencies(${PROJECT_NAME} rclcpp gazebo_dev gazebo_ros std_msgs sensor_msgs)
 ament_export_dependencies(gazebo_dev)
 
 ament_export_targets(SetJointPositions HAS_LIBRARY_TARGET)
@@ -50,7 +43,6 @@ if(BUILD_TESTING)
     install(DIRECTORY test DESTINATION share/${PROJECT_NAME})
     find_package(launch_testing_ament_cmake REQUIRED)
     find_package(robot_state_publisher REQUIRED)
-    find_package(joint_state_publisher REQUIRED)
     add_launch_test(test/test_plugin.py)
 endif()
 
