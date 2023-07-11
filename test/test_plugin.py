@@ -173,8 +173,3 @@ class TestSetJointsPositionsPlugin(unittest.TestCase):
         test_state.velocity = []
         test_state.effort = []
         self.joint_publisher.publish(test_state)
-
-    # Get the joint position of a model in Gazebo
-
-
-
