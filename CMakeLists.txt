@@ -43,6 +43,7 @@ if(BUILD_TESTING)
     install(DIRECTORY test DESTINATION share/${PROJECT_NAME})
     find_package(launch_testing_ament_cmake REQUIRED)
     find_package(robot_state_publisher REQUIRED)
+    find_package(joint_state_publisher_gui REQUIRED)
     add_launch_test(test/test_plugin.py)
 endif()
 
