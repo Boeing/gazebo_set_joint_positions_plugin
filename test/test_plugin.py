@@ -46,8 +46,6 @@ def generate_test_description():
                     os.path.join(pkg_gazebo_ros, 'launch',
                                  'gzserver.launch.py')
                 ),
-                launch_arguments={
-                    'world': world_file_name, 'gui': '0'}.items(),
             ),
 
             IncludeLaunchDescription(
@@ -55,7 +53,6 @@ def generate_test_description():
                     os.path.join(pkg_gazebo_ros, 'launch',
                                  'gzclient.launch.py')
                 ),
-                launch_arguments={'gui': '0'}.items(),
             ),
 
             # Launch robot_state_publisher
