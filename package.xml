@@ -16,7 +16,6 @@
     <depend>std_msgs</depend>
 
     <test_depend>launch_testing_ament_cmake</test_depend>
-    <test_depend>gazebo_planar_move_plugin</test_depend>
     <test_depend>ros2launch</test_depend>
 
     <export>

@@ -30,9 +30,9 @@ from time import sleep
 def generate_test_description():
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    world_file_name = os.path.join(get_package_share_directory('gazebo_planar_move_plugin'),
+    world_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                    'test', 'test.world')
-    urdf_file_name = os.path.join(get_package_share_directory('gazebo_planar_move_plugin'),
+    urdf_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                   'test', 'test.urdf')
 
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
@@ -90,7 +90,7 @@ class TestShutdown(unittest.TestCase):
         subprocess.run(["pkill", "gzclient"])
 
 
-class TestPlanarMovePlugin(unittest.TestCase):
+class TestSetJointsPositionsPlugin(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -137,7 +137,7 @@ class TestPlanarMovePlugin(unittest.TestCase):
         qos_profile = QoSProfile(
             depth=100, durability=DurabilityPolicy.TRANSIENT_LOCAL, history=HistoryPolicy.KEEP_LAST)
         self.joint_publisher = self.node.create_publisher(
-            JointState, '/joint_state', qos_profile)
+            JointState, '/ur_driver/joint_states', qos_profile)
 
         self.robot_name = 'test_robot'
         self.world_frame = 'world'
@@ -148,7 +148,7 @@ class TestPlanarMovePlugin(unittest.TestCase):
         self.node.destroy_node()
 
     def test_set(self):
-        time.sleep(2000)
+        time.sleep(2)
         self.set_and_test_position(1.0)
         self.set_and_test_position(3.0)
         self.set_and_test_position(-1.0)
@@ -157,10 +157,11 @@ class TestPlanarMovePlugin(unittest.TestCase):
     def set_and_test_position(self, test_position):
         # Set test position
         self.set_position(test_position)
-        time.sleep(2000)  # Small sleep to wait for the set to take effect
+        time.sleep(2)  # Small sleep to wait for the set to take effect
 
         # Get entity joint position
-        self.assertAlmostEqual(self.__joint_state.position[0], test_position)
+        self.assertAlmostEqual(
+            self.__joint_state.position[0], test_position)
 
     def set_position(self, position):
         test_state = JointState()
@@ -172,3 +173,8 @@ class TestPlanarMovePlugin(unittest.TestCase):
         test_state.velocity = []
         test_state.effort = []
         self.joint_publisher.publish(test_state)
+
+    # Get the joint position of a model in Gazebo
+
+
+

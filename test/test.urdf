@@ -7,7 +7,7 @@
             <topic_name>ur_driver/joint_states</topic_name>
         </plugin>
         <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-           <jointName>set_link_joint</jointName>
+           <joint_name>set_link_joint</joint_name>
            <updateRate>10.0</updateRate>
            <alwaysOn>true</alwaysOn>
         </plugin>
@@ -79,6 +79,30 @@
         <disableFixedJointLumping>true</disableFixedJointLumping>
     </gazebo>
 
+    <ros2_control name="test_robot" type="system">
 
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <joint name="set_link_joint">
+            <command_interface name="position">
+                <param name="min">-6.28</param>
+                <param name="max">6.28</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+    </ros2_control>
+
+    <!-- Gazebo's ros2_control plugin -->
+    <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+            <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+            <parameters>$(find gazebo_set_joint_positions_plugin)/config/controller_config.yaml</parameters>
+        </plugin>
+    </gazebo>
 
 </robot>
