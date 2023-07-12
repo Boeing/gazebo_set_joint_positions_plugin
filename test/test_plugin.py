@@ -21,6 +21,7 @@ from rclpy.parameter import Parameter
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
+from launch.substitutions import Command
 from sensor_msgs.msg import JointState
 
 from time import sleep
@@ -54,13 +55,14 @@ def generate_test_description():
                 executable='robot_state_publisher',
                 name='robot_state_publisher',
                 output='screen',
-                parameters=[{'use_sim_time': True}],
-                arguments=[urdf_file_name]
+                parameters=[{'use_sim_time': True, 'robot_description': Command(
+                    ['xacro ', urdf_file_name])}],
             ),
 
             # Spawn robot in Gazebo
             Node(package='gazebo_ros', executable='spawn_entity.py',
-                 arguments=['-entity', 'test_robot', '-file', urdf_file_name],
+                 arguments=['-entity', 'test_robot',
+                            '-topic', '/robot_description'],
                  output='screen'),
 
             launch_testing.actions.ReadyToTest(),
@@ -153,6 +155,7 @@ class TestSetJointsPositionsPlugin(unittest.TestCase):
         # Get entity joint position
         self.assertAlmostEqual(
             self.__joint_state.position[0], test_position)
+        print('good')
 
     def set_position(self, position):
         test_state = JointState()
