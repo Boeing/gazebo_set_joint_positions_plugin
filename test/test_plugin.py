@@ -38,15 +38,19 @@ def generate_test_description():
 
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
     print('world world_file_name : {}'.format(world_file_name))
+    print(os.getenv('GAZEBO_MODEL_PATH'))
+    print(os.getenv('GAZEBO_RESOURCE_PATH'))
+    gzserver_launch_file = os.path.join(
+        pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
 
     return launch.LaunchDescription(
         [
-            # Launch GAZEBO
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(pkg_gazebo_ros, 'launch',
-                                 'gzserver.launch.py')
-                ),
+                PythonLaunchDescriptionSource(gzserver_launch_file),
+                launch_arguments={
+                    'init': 'true',
+                    'factory': 'true'
+                }.items()
             ),
 
             # Launch robot_state_publisher
@@ -155,7 +159,6 @@ class TestSetJointsPositionsPlugin(unittest.TestCase):
         # Get entity joint position
         self.assertAlmostEqual(
             self.__joint_state.position[0], test_position)
-        print('good')
 
     def set_position(self, position):
         test_state = JointState()
