@@ -48,13 +48,6 @@ def generate_test_description():
                 ),
             ),
 
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(pkg_gazebo_ros, 'launch',
-                                 'gzclient.launch.py')
-                ),
-            ),
-
             # Launch robot_state_publisher
             Node(
                 package='robot_state_publisher',
@@ -145,7 +138,7 @@ class TestSetJointsPositionsPlugin(unittest.TestCase):
         self.node.destroy_node()
 
     def test_set(self):
-        while(self.__joint_state == None):
+        while (self.__joint_state is None):
             time.sleep(1)
         self.set_and_test_position(1.0)
         self.set_and_test_position(3.0)
