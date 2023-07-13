@@ -8,7 +8,7 @@ from rclpy.executors import MultiThreadedExecutor
 from threading import Thread
 import launch_testing
 import launch_testing.actions
-from ament_index_python import get_package_share_directory, get_package_prefix
+from ament_index_python import get_package_share_directory
 from std_msgs.msg import Header
 import subprocess
 import rclpy
@@ -18,7 +18,7 @@ from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile
 import pytest
 from rclpy.parameter import Parameter
 
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.substitutions import Command
@@ -29,31 +29,29 @@ from time import sleep
 
 @pytest.mark.launch_test
 def generate_test_description():
-    description_package_name = "gazebo_set_joint_positions_plugin"
-    install_dir = get_package_prefix(description_package_name)
-    gazebo_models_path = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'), 'test')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    world_file_name = os.path.join(gazebo_models_path, 'test.world')
-    urdf_file_name = os.path.join(gazebo_models_path, 'test.urdf')
-    if 'GAZEBO_MODEL_PATH' in os.environ:
-        os.environ['GAZEBO_MODEL_PATH'] = os.environ['GAZEBO_MODEL_PATH'] + \
-            ':' + install_dir + '/share' + ':' + gazebo_models_path
-    else:
-        os.environ['GAZEBO_MODEL_PATH'] = install_dir + \
-            "/share" + ':' + gazebo_models_path
+    world_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
+                                   'test', 'test.world')
+    urdf_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
+                                  'test', 'test.urdf')
 
-    if 'GAZEBO_PLUGIN_PATH' in os.environ:
-        os.environ['GAZEBO_PLUGIN_PATH'] = os.environ['GAZEBO_PLUGIN_PATH'] + \
-            ':' + install_dir + '/lib'
-    else:
-        os.environ['GAZEBO_PLUGIN_PATH'] = install_dir + '/lib'
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
     print('world world_file_name : {}'.format(world_file_name))
-    print(os.getenv('GAZEBO_MODEL_PATH'))
-    print(os.getenv('GAZEBO_RESOURCE_PATH'))
+
     gzserver_launch_file = os.path.join(
         pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
+
+    xml = open(urdf_file_name, 'r').read()
+
+    xml = xml.replace('"', '\\"')
+
+    spawn_args = '{name: \"test_robot\", xml: \"' + xml + '\" }'
+
+    spawn_robot = ExecuteProcess(
+        cmd=['ros2', 'service', 'call', '/spawn_entity',
+             'gazebo_msgs/SpawnEntity', spawn_args],
+        output='screen')
 
     return launch.LaunchDescription(
         [
@@ -65,12 +63,7 @@ def generate_test_description():
                 }.items()
             ),
 
-
-            # Spawn robot in Gazebo
-            Node(package='gazebo_ros', executable='spawn_entity.py',
-                 arguments=['-entity', 'test_robot',
-                            '-file', urdf_file_name],
-                 output='screen'),
+            spawn_robot,
 
             launch_testing.actions.ReadyToTest(),
         ]
