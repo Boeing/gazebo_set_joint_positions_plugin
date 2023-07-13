@@ -28,8 +28,6 @@ from time import sleep
 
 @pytest.mark.launch_test
 def generate_test_description():
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-
     world_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                    'test', 'test.world')
     urdf_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
@@ -38,13 +36,11 @@ def generate_test_description():
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
     print('world world_file_name : {}'.format(world_file_name))
 
-
+    # Gazebo is launched using this command because it's the only option which GazeboRosFactory is activated in ci/cd
     launch_gazebo = ExecuteProcess(
         cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so'],
         output='screen'
     )
-
-
 
     return launch.LaunchDescription(
         [
@@ -63,7 +59,6 @@ def generate_test_description():
                  arguments=['-entity', 'test_robot',
                             '-topic', '/robot_description'],
                  output='screen'),
-
 
             launch_testing.actions.ReadyToTest(),
         ]
