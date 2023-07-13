@@ -18,8 +18,7 @@ from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile
 import pytest
 from rclpy.parameter import Parameter
 
-from launch.actions import IncludeLaunchDescription, ExecuteProcess
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import ExecuteProcess
 from launch_ros.actions import Node
 from launch.substitutions import Command
 from sensor_msgs.msg import JointState
@@ -39,31 +38,32 @@ def generate_test_description():
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
     print('world world_file_name : {}'.format(world_file_name))
 
-    gzserver_launch_file = os.path.join(
-        pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
 
-    xml = open(urdf_file_name, 'r').read()
+    launch_gazebo = ExecuteProcess(
+        cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so'],
+        output='screen'
+    )
 
-    xml = xml.replace('"', '\\"')
 
-    spawn_args = '{name: \"test_robot\", xml: \"' + xml + '\" }'
-
-    spawn_robot = ExecuteProcess(
-        cmd=['ros2', 'service', 'call', '/spawn_entity',
-             'gazebo_msgs/SpawnEntity', spawn_args],
-        output='screen')
 
     return launch.LaunchDescription(
         [
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(gzserver_launch_file),
-                launch_arguments={
-                    'init': 'true',
-                    'factory': 'true'
-                }.items()
-            ),
+            launch_gazebo,
 
-            spawn_robot,
+            # Launch robot_state_publisher
+            Node(
+                package='robot_state_publisher',
+                executable='robot_state_publisher',
+                name='robot_state_publisher',
+                output='screen',
+                parameters=[{'use_sim_time': True, 'robot_description': Command(
+                    ['xacro ', urdf_file_name])}],
+            ),
+            Node(package='gazebo_ros', executable='spawn_entity.py',
+                 arguments=['-entity', 'test_robot',
+                            '-topic', '/robot_description'],
+                 output='screen'),
+
 
             launch_testing.actions.ReadyToTest(),
         ]
