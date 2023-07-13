@@ -19,6 +19,7 @@
     <test_depend>robot_state_publisher</test_depend>
     <test_depend>joint_state_publisher</test_depend>
     <test_depend>ros2launch</test_depend>
+    <test_depend>gazebo_ros_pkgs</test_depend>
     <test_depend>urdf</test_depend>
     <test_depend>xacro</test_depend>
 
