@@ -18,9 +18,9 @@ from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile
 import pytest
 from rclpy.parameter import Parameter
 
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import ExecuteProcess
 from launch_ros.actions import Node
+from launch.substitutions import Command
 from sensor_msgs.msg import JointState
 
 from time import sleep
@@ -28,35 +28,23 @@ from time import sleep
 
 @pytest.mark.launch_test
 def generate_test_description():
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-
-    world_file_name = os.path.join(get_package_share_directory('gazebo_planar_move_plugin'),
+    world_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                    'test', 'test.world')
-    urdf_file_name = os.path.join(get_package_share_directory('gazebo_planar_move_plugin'),
+    urdf_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                   'test', 'test.urdf')
 
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
     print('world world_file_name : {}'.format(world_file_name))
 
+    # Gazebo is launched using this command because it's the only option which GazeboRosFactory is activated in ci/cd
+    launch_gazebo = ExecuteProcess(
+        cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so'],
+        output='screen'
+    )
+
     return launch.LaunchDescription(
         [
-            # Launch GAZEBO
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(pkg_gazebo_ros, 'launch',
-                                 'gzserver.launch.py')
-                ),
-                launch_arguments={
-                    'world': world_file_name, 'gui': '0'}.items(),
-            ),
-
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(pkg_gazebo_ros, 'launch',
-                                 'gzclient.launch.py')
-                ),
-                launch_arguments={'gui': '0'}.items(),
-            ),
+            launch_gazebo,
 
             # Launch robot_state_publisher
             Node(
@@ -64,13 +52,12 @@ def generate_test_description():
                 executable='robot_state_publisher',
                 name='robot_state_publisher',
                 output='screen',
-                parameters=[{'use_sim_time': True}],
-                arguments=[urdf_file_name]
+                parameters=[{'use_sim_time': True, 'robot_description': Command(
+                    ['xacro ', urdf_file_name])}],
             ),
-
-            # Spawn robot in Gazebo
             Node(package='gazebo_ros', executable='spawn_entity.py',
-                 arguments=['-entity', 'test_robot', '-file', urdf_file_name],
+                 arguments=['-entity', 'test_robot',
+                            '-topic', '/robot_description'],
                  output='screen'),
 
             launch_testing.actions.ReadyToTest(),
@@ -90,7 +77,7 @@ class TestShutdown(unittest.TestCase):
         subprocess.run(["pkill", "gzclient"])
 
 
-class TestPlanarMovePlugin(unittest.TestCase):
+class TestSetJointsPositionsPlugin(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -137,7 +124,7 @@ class TestPlanarMovePlugin(unittest.TestCase):
         qos_profile = QoSProfile(
             depth=100, durability=DurabilityPolicy.TRANSIENT_LOCAL, history=HistoryPolicy.KEEP_LAST)
         self.joint_publisher = self.node.create_publisher(
-            JointState, '/joint_state', qos_profile)
+            JointState, '/ur_driver/joint_states', qos_profile)
 
         self.robot_name = 'test_robot'
         self.world_frame = 'world'
@@ -148,7 +135,8 @@ class TestPlanarMovePlugin(unittest.TestCase):
         self.node.destroy_node()
 
     def test_set(self):
-        time.sleep(2000)
+        while (self.__joint_state is None):
+            time.sleep(1)
         self.set_and_test_position(1.0)
         self.set_and_test_position(3.0)
         self.set_and_test_position(-1.0)
@@ -157,10 +145,11 @@ class TestPlanarMovePlugin(unittest.TestCase):
     def set_and_test_position(self, test_position):
         # Set test position
         self.set_position(test_position)
-        time.sleep(2000)  # Small sleep to wait for the set to take effect
+        time.sleep(2)  # Small sleep to wait for the set to take effect
 
         # Get entity joint position
-        self.assertAlmostEqual(self.__joint_state.position[0], test_position)
+        self.assertAlmostEqual(
+            self.__joint_state.position[0], test_position)
 
     def set_position(self, position):
         test_state = JointState()

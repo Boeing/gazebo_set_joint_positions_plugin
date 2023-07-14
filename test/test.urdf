@@ -1,19 +1,6 @@
 <?xml version="1.0"?>
 <robot name="test_robot">
 
-    <gazebo>
-        <plugin name="set_joints_position_plugin" filename="libgazebo_set_joint_positions_plugin.so">
-            <robot_namespace>/</robot_namespace>
-            <topic_name>ur_driver/joint_states</topic_name>
-        </plugin>
-        <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-           <jointName>set_link_joint</jointName>
-           <updateRate>10.0</updateRate>
-           <alwaysOn>true</alwaysOn>
-        </plugin>
-
-    </gazebo>
-
     <link name="world">
     </link>
 
@@ -42,9 +29,6 @@
         <child link="base_link"/>
         <origin xyz="0 0 2" rpy="0 0 0"/>
     </joint>
-    <gazebo reference="world_link">
-        <disableFixedJointLumping>true</disableFixedJointLumping>
-    </gazebo>
 
     <link name="set_link">
         <visual>
@@ -75,10 +59,17 @@
         <limit lower="-6.283" upper="6.283" effort="330.0" velocity="2.16"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
-    <gazebo reference="set_link_joint">
-        <disableFixedJointLumping>true</disableFixedJointLumping>
+    <gazebo>
+        <plugin name="set_joint_positions_plugin" filename="libgazebo_set_joint_positions_plugin.so">
+            <robot_namespace>/</robot_namespace>
+            <topic_name>ur_driver/joint_states</topic_name>
+        </plugin>
+        <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <joint_name>set_link_joint</joint_name>
+            <update_rate>10.0</update_rate>
+            <always_on>true</always_on>
+        </plugin>
+
     </gazebo>
-
-
 
 </robot>

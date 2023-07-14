@@ -42,7 +42,10 @@ install(
 if(BUILD_TESTING)
     install(DIRECTORY test DESTINATION share/${PROJECT_NAME})
     find_package(launch_testing_ament_cmake REQUIRED)
-
+    find_package(robot_state_publisher REQUIRED)
+    find_package(urdf REQUIRED)
+    find_package(xacro REQUIRED)
+    find_package(gazebo_ros_pkgs REQUIRED)
     add_launch_test(test/test_plugin.py)
 endif()
 
