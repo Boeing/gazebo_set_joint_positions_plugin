@@ -2,8 +2,8 @@
 
 | Distro | CI Status |
 | ------ | --------- |
-| Noetic | [![CI](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=noetic)](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
-| Humble | [![CI](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=humble)](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
+| Noetic | [![CI](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=humble)](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
+| Humble | [![CI](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=noetic)](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
 
 ## Motivation
 
