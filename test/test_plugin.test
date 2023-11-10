@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <launch>
 
-    <arg name="mongo_hostname" default="$(optenv MONGO_HOST localhost)"/>
-    <arg name="mongo_port" default="$(optenv MONGO_PORT 27017)"/>
-
     <arg name="use_sim_time" default="true"/>
     <param name="/use_sim_time" value="true"/>
 

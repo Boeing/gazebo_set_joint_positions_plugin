@@ -1,3 +1,0 @@
-include:
-  - project: robotics/continuous_integration
-    file: /pipelines/.ros-noetic-pkg-ci.yml
