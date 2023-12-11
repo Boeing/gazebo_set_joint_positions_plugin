@@ -5,7 +5,7 @@
     <description>Set gazebo robot joint positions</description>
     <maintainer email="Jason.Cochrane@boeing.com">Boeing</maintainer>
     <author>Boeing</author>
-    <license>Boeing Proprietary</license>
+    <license>Apache-2.0</license>
 
     <buildtool_depend>ament_cmake</buildtool_depend>
 
