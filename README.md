@@ -41,29 +41,7 @@ The Boeing Company
         Boeing Reasearch and Technology Advanced Production Systems Team
 
 # License
-
-Copyright 2023 The Boeing Company
-
-Licensed under the Apache License, Version 2.0 (the "License") with the following modification;
-you may not use this file except in compliance with the Apache License and the following modification to it:
-
-(Appended as Section 10)
-
-By accepting this software, recipient agrees that the representations, warranties, obligations, and liabilities of The Boeing Company set forth in this software, if any, are exclusive and in substitution for all other all other representations, warranties, obligations, and liabilities of The Boeing Company.
-Recipient hereby waives, releases, and renounces all other rights, remedies, and claims (including tortious claims for loss of or damage to property) of recipient against The Boeing Company with respect to this software.
-The Boeing Company hereby disclaims all implied warranties, including but not limited to, all implied warranties of merchantability, fitness, course of dealing, and usage of trade.
-The Boeing Company shall have no liability, whether arising in contract (including warranty), tort (whether or not arising from the negligence of The Boeing Company), or otherwise, for any loss of use, revenue, or profit, or for any other unspecified direct, indirect, incidental, or consequential damages for anything delivered or otherwise provided by The Boeing Company under this software.
-
-You may obtain a copy of the original, unmodified License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-echo 
+The package is released under the Apache 2.0 License
 
 # Contributing
 
