@@ -6,7 +6,7 @@
 
     <!-- Gazebo Arguments -->
     <arg name="gui" default="false"/>
-    <arg name="world_name" default="$(find gazebo_set_joint_positions_plugin)/test/test.world"/>
+    <arg name="world_name" default="$(find boeing_gazebo_set_joint_positions_plugin)/test/test.world"/>
     <arg name="extra_gazebo_args" default=""/>
     <arg name="debug" default="false"/>
     <arg name="physics" default="ode"/>
@@ -34,10 +34,10 @@
     </group>
 
     <!-- URDF -->
-    <param name="robot_description" textfile="$(find gazebo_set_joint_positions_plugin)/test/test.urdf"/>
+    <param name="robot_description" textfile="$(find boeing_gazebo_set_joint_positions_plugin)/test/test.urdf"/>
 
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
           args="-urdf -model test_robot -param robot_description"/>
 
-    <test test-name="test_plugin" pkg="gazebo_set_joint_positions_plugin" type="test_plugin.py"/>
+    <test test-name="test_plugin" pkg="boeing_gazebo_set_joint_positions_plugin" type="test_plugin.py"/>
 </launch>

@@ -2,8 +2,8 @@
 
 | Distro | CI Status |
 | ------ | --------- |
-| Noetic | [![CI](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=noetic)](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
-| Humble | [![CI](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=humble)](https://github.com/Boeing/gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
+| Noetic | [![CI](https://github.com/Boeing/boeing_gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=noetic)](https://github.com/Boeing/boeing_gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
+| Humble | [![CI](https://github.com/Boeing/boeing_gazebo_set_joint_positions_plugin/actions/workflows/main.yml/badge.svg?branch=humble)](https://github.com/Boeing/boeing_gazebo_set_joint_positions_plugin/actions/workflows/main.yml) |
 
 ## Motivation
 
@@ -38,7 +38,7 @@ This plugin sets a RobotModel's joint values to the latest published values on a
 # Authors
 The Boeing Company
 
-        Boeing Reasearch and Technology Advanced Production Systems Team
+        Boeing Research and Technology Advanced Production Systems Team
 
 # License
 The package is released under the Apache 2.0 License

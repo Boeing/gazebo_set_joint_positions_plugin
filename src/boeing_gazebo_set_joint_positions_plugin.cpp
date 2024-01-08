@@ -1,4 +1,4 @@
-#include <gazebo_set_joint_positions_plugin/gazebo_set_joint_positions_plugin.h>
+#include <boeing_gazebo_set_joint_positions_plugin/boeing_gazebo_set_joint_positions_plugin.h>
 
 #include <algorithm>
 #include <string>
