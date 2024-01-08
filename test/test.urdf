@@ -60,7 +60,7 @@
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <gazebo>
-        <plugin name="set_joint_positions_plugin" filename="libgazebo_set_joint_positions_plugin.so">
+        <plugin name="set_joint_positions_plugin" filename="libboeing_gazebo_set_joint_positions_plugin.so">
             <robot_namespace>/</robot_namespace>
             <topic_name>ur_driver/joint_states</topic_name>
         </plugin>
