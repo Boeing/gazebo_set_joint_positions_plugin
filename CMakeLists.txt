@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(boeing_gazebo_set_joint_positions_plugin)
+project(gazebo_set_joint_positions_plugin)
 
 # Default to C++17
 if(NOT CMAKE_CXX_STANDARD)

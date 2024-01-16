@@ -28,9 +28,9 @@ from time import sleep
 
 @pytest.mark.launch_test
 def generate_test_description():
-    world_file_name = os.path.join(get_package_share_directory('boeing_gazebo_set_joint_positions_plugin'),
+    world_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                    'test', 'test.world')
-    urdf_file_name = os.path.join(get_package_share_directory('boeing_gazebo_set_joint_positions_plugin'),
+    urdf_file_name = os.path.join(get_package_share_directory('gazebo_set_joint_positions_plugin'),
                                   'test', 'test.urdf')
 
     print('robot  urdf_file_name : {}'.format(urdf_file_name))
