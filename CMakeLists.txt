@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(boeing_gazebo_set_joint_positions_plugin)
+project(gazebo_set_joint_positions_plugin)
 
 add_definitions(-std=c++14)
 
